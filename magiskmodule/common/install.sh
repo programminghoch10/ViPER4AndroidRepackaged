@@ -240,7 +240,28 @@ cp -f $MODPATH/v4afx.apk $FOL/v4afx.apk
 umount -l $(mount | awk '{print $3}' | grep 'libv4a_fx.so')
 killall audioserver
 
+
+ui_print " "
+ui_print "- Patching audio_effects.xml"
+mkdir -p $MODPATH/system/vendor/etc
+AUDIO_EFFECTS_FILE=$MODPATH/system/vendor/etc/audio_effects.xml
+cp -f /vendor/etc/audio_effects.xml $AUDIO_EFFECTS_FILE
+sed -i "/v4a_standard_fx/d" $AUDIO_EFFECTS_FILE
+sed -i "/v4a_fx/d" $AUDIO_EFFECTS_FILE
+sed -i "/<libraries>/ a\        <library name=\"v4a_fx\" path=\"libv4a_fx.so\"\/>" $AUDIO_EFFECTS_FILE
+sed -i "/<effects>/ a\        <effect name=\"v4a_standard_fx\" library=\"v4a_fx\" uuid=\"41d3c987-e6cf-11e3-a88a-11aba5d5c51b\"\/>" $AUDIO_EFFECTS_FILE
+
+# here is how to strace v4a app:
+#  run adb root
+#  run in adb shell
+#    while [ -z "$(pidof com.pittvandewitt.viperfx)" ]; do true; done && (strace -f -p $(pidof com.pittvandewitt.viperfx) 2>&1| grep -i "open")
+ui_print " "
 ui_print "- Installing ViPER4AndroidFX $(grep_prop version $MODPATH/module.prop)..."
+ui_print "   After this completes,"
+#ui_print "   open V4A app and follow the prompts"
+ui_print "   you MUST REBOOT before opening the app"
+#ui_print "   reboot your device."
+ui_print " "
 $ENFORCE && setenforce 0
 (pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || abort "Failed to install V4AFX!"
 $ENFORCE && setenforce 1
@@ -248,10 +269,6 @@ $ENFORCE && setenforce 1
 # Install temporary service script
 install_script -l $MODPATH/common/service.sh
 
-ui_print "   After this completes,"
-ui_print "   open V4A app and follow the prompts"
-ui_print " "
-sleep 5
 
 REMS=$(find $NVBASE/modules/*/system $MODULEROOT/*/system -type f -name "ViPER4AndroidFX.apk" 2>/dev/null)
 if [ "$REMS" ]; then
