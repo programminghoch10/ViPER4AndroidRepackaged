@@ -57,6 +57,20 @@ if [ $CUSTOM_VDC_FOUND = true ]; then
   done
 fi
 
+
+if [ -z "$(ls "$NEWFOL/Kernel" 2>/dev/null)" ]; then
+  ui_print " "
+  ui_print "- Copying Viper IRS files"
+  ui_print " "
+  mkdir -p $NEWFOL/Kernel 2>/dev/null
+  unzip -oj $MODPATH/common/ViperIRS.zip -d $NEWFOL/Kernel >&2
+else
+  ui_print " "
+  ui_print "  Skipping Viper IRS copy, folder is not empty"
+  ui_print " "
+fi
+rm $MODPATH/common/ViperIRS.zip >/dev/null 2>&1
+
 # Force driver reinstall to clear out old stuff in event of change from installed version
 umount -l $(mount | awk '{print $3}' | grep 'libv4a_fx.so')
 killall audioserver
