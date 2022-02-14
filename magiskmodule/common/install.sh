@@ -22,6 +22,40 @@ ui_print "- Placing Files to New Directory:"
 ui_print "  $NEWFOL"
 mkdir -p $NEWFOL
 
+[ ! -d "$NEWFOL/DDC" ] && mkdir -p "$NEWFOL/DDC" 2>/dev/null
+SDCARD="/storage/emulated/0"
+CUSTOM_VDC_FILES=$(find $SDCARD/ -name '*.vdc' -not -path "$SDCARD/Android/*" -not -path "$SDCARD/ViPER4Android/*")
+[ -n "$CUSTOM_VDC_FILES" ] && CUSTOM_VDC_FOUND=true || CUSTOM_VDC_FOUND=false
+[ -z "$(ls "$NEWFOL/DDC" 2>/dev/null)" ] && DDC_FOLDER_EMPTY=true || DDC_FOLDER_EMPTY=false
+if [ $DDC_FOLDER_EMPTY = true ] && [ $CUSTOM_VDC_FOUND = false ]; then
+  ui_print " "
+  ui_print "- Copying original V4A vdcs"
+  ui_print " "
+  ui_print "   Note that some of these aren't that great"
+  ui_print "   Check out here for better ones:"
+  ui_print "   https://t.me/vdcservice"
+  ui_print " "
+  mkdir -p "$NEWFOL/DDC" 2>/dev/null
+  unzip -oj $MODPATH/common/vdcs.zip -d $NEWFOL/DDC >&2
+else 
+  ui_print " "
+  ui_print "  Skipping Viper original vdc copy"
+  [ $DDC_FOLDER_EMPTY = false ] && ui_print "    the folder is not empty"
+  [ $CUSTOM_VDC_FOUND = true ] && ui_print "    custom vdcs have been found"
+  ui_print " "
+fi
+rm $MODPATH/common/vdcs.zip >/dev/null 2>&1
+if [ $CUSTOM_VDC_FOUND = true ]; then
+  ui_print " "
+  ui_print "- Copying custom V4A vdcs"
+  ui_print " "
+  ui_print "  Found these custom files:"
+  ui_print "$CUSTOM_VDC_FILES"
+  ui_print " "
+  for file in $CUSTOM_VDC_FILES; do
+    cp -fv "$file" "$NEWFOL/DDC"
+  done
+fi
 
 # Force driver reinstall to clear out old stuff in event of change from installed version
 umount -l $(mount | awk '{print $3}' | grep 'libv4a_fx.so')
