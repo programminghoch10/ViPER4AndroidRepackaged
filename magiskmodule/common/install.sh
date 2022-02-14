@@ -209,10 +209,6 @@ if [ ! -z "$FILES" ] && [ ! "$(echo $FILES | grep '/aml/')" ]; then
   sleep 3
 fi
 
-ui_print "- Downloading latest apk..."
-# URL needs changed to real server
-(curl -k -o $MODPATH/v4afx.apk https://zackptg5.com/downloads/v4afx.apk) || abort "   Download failed! Connect to internet and try again"
-
 # Convert old profiles to new presets
 profile_convert
 
@@ -246,7 +242,7 @@ killall audioserver
 
 ui_print "- Installing ViPER4AndroidFX $(grep_prop version $MODPATH/module.prop)..."
 $ENFORCE && setenforce 0
-(pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || ui_print "   V4AFX install failed! Install $FOL/v4afx.apk manually"
+(pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || abort "Failed to install V4AFX!"
 $ENFORCE && setenforce 1
 
 # Install temporary service script
