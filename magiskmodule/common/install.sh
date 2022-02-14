@@ -112,3 +112,13 @@ $ENFORCE && setenforce 0
 (pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || abort "Failed to install V4AFX!"
 $ENFORCE && setenforce 1
 pm disable $VIPERFXPACKAGE >/dev/null 2>&1
+
+ui_print " "
+ui_print "- Configuring ViPER4Android"
+ui_print " "
+VIPERFXPREFS="$(pm dump $VIPERFXPACKAGE | grep dataDir | head -n 1 | cut -d'=' -f2)"
+VIPERFXPREFSOWNER="$(stat -c '%U' "$VIPERFXPREFS")"
+VIPERFXSHAREDPREFS="$VIPERFXPREFS/shared_prefs"
+[ ! -d "$VIPERFXSHAREDPREFS" ] && mkdir "$VIPERFXSHAREDPREFS"
+cp -f "$MODPATH/common/viperfx_preferences.xml" "$VIPERFXSHAREDPREFS/${VIPERFXPACKAGE}_preferences.xml"
+chown -R $VIPERFXPREFSOWNER:$VIPERFXPREFSOWNER "$VIPERFXPREFS"
