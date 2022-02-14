@@ -52,6 +52,3 @@ ui_print " "
 $ENFORCE && setenforce 0
 (pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || abort "Failed to install V4AFX!"
 $ENFORCE && setenforce 1
-
-# Install temporary service script
-install_script -l $MODPATH/common/service.sh
