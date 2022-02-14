@@ -41,9 +41,7 @@ REPLACE="
 ##########################################################################################
 
 set_permissions() {
-  rm -rf $NVBASE/modules/$MODID/*
-  cp -f $MODPATH/module.prop $NVBASE/modules/$MODID/module.prop
-  rm -rf $MODPATH
+  : #remove if changing stuff here
 
   # Note that all files/folders in magisk module directory have the $MODPATH prefix - keep this prefix on all of your files/folders
   # Some examples:
