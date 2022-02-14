@@ -1,10 +1,6 @@
 
 [ "`getenforce`" == "Enforcing" ] && ENFORCE=true || ENFORCE=false
-FOL="/storage/emulated/0/ViPER4Android"
-[ -d "$FOL" ] || mkdir $FOL
 NEWFOL="/storage/emulated/0/Android/data/com.pittvandewitt.viperfx/files"
-# Backup existing presets
-[ -d "$NEWFOL" ] && cp -rf $NEWFOL/* $FOL/
 
 # Uninstall v4a app if installed
 VIPERFXPACKAGE="com.pittvandewitt.viperfx"
@@ -21,29 +17,12 @@ if [ ! -z "$FILES" ] && [ ! "$(echo $FILES | grep '/aml/')" ]; then
   sleep 3
 fi
 
-# Copy to new scoped storage directory
+# Create the new scoped storage directory
 ui_print " "
 ui_print "- Placing Files to New Directory:"
 ui_print "  $NEWFOL"
 mkdir -p $NEWFOL
-cp -rf $FOL/DDC $FOL/Kernel $FOL/Preset $NEWFOL/
-ui_print " "
-ui_print "   Note that all presets and other files are now in:"
-ui_print "   $NEWFOL"
-sleep 3
 
-ui_print " "
-ui_print "- Copying original V4A vdcs to:"
-ui_print "  $FOL/DDC-Orig..." 
-ui_print "   Copy the ones you want to the DDC folder"
-ui_print " "
-ui_print "   Note that some of these aren't that great"
-ui_print "   Check out here for better ones:"
-ui_print "   https://t.me/vdcservice"
-ui_print " "
-mkdir -p $FOL/DDC-Orig 2>/dev/null
-unzip -oj $MODPATH/common/vdcs.zip -d $FOL/DDC-Orig >&2
-cp -f $MODPATH/v4afx.apk $FOL/v4afx.apk
 
 # Force driver reinstall to clear out old stuff in event of change from installed version
 umount -l $(mount | awk '{print $3}' | grep 'libv4a_fx.so')
