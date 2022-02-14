@@ -90,13 +90,25 @@ sed -i "/<effects>/ a\        <effect name=\"v4a_standard_fx\" library=\"v4a_fx\
 #  run adb root
 #  run in adb shell
 #    while [ -z "$(pidof com.pittvandewitt.viperfx)" ]; do true; done && (strace -f -p $(pidof com.pittvandewitt.viperfx) 2>&1| grep -i "open")
+
+AUDIOFX_PACKAGE="org.lineageos.audiofx"
+if [ -n "$(pm list packages | grep $AUDIOFX_PACKAGE)" ]; then
+  ui_print " "
+  ui_print "- Disabling $AUDIOFX_PACKAGE"
+  if [ -n "$(pm list packages -d | grep $AUDIOFX_PACKAGE)" ]; then
+    ui_print"    $AUDIOFX_PACKAGE is already disabled"
+  else 
+    pm disable $AUDIOFX_PACKAGE
+  fi
+  ui_print " "
+fi
+
+
 ui_print " "
 ui_print "- Installing ViPER4AndroidFX $(grep_prop version $MODPATH/module.prop)..."
-ui_print "   After this completes,"
-#ui_print "   open V4A app and follow the prompts"
-ui_print "   you MUST REBOOT before opening the app"
-#ui_print "   reboot your device."
+ui_print "   After this completes, reboot your device."
 ui_print " "
 $ENFORCE && setenforce 0
 (pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || abort "Failed to install V4AFX!"
 $ENFORCE && setenforce 1
+pm disable $VIPERFXPACKAGE
