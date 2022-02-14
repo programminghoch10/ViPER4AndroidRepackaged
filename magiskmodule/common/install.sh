@@ -7,14 +7,13 @@ VIPERFXPACKAGE="com.pittvandewitt.viperfx"
 [ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall "$VIPERFXPACKAGE" >/dev/null 2>&1
 
 # Tell user aml is needed if applicable
-FILES=$(find $NVBASE/modules/*/system $MODULEROOT/*/system -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml" 2>/dev/null | sed "/$MODID/d")
+FILES=$(find $NVBASE/modules/*/system $MODULEROOT/*/system -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml" -not -path "$NVBASE/modules/ViPER4AndroidFX/*" 2>/dev/null | sed "/$MODID/d")
 if [ ! -z "$FILES" ] && [ ! "$(echo $FILES | grep '/aml/')" ]; then
   ui_print " "
-  ui_print "   ! Conflicting audio mod found!"
-  ui_print "   ! You will need to install !"
-  ui_print "   ! Audio Modification Library !"
+  ui_print "   ! Conflicting audio mod found !"
+  ui_print "   ! You will need to install    !"
+  ui_print "   ! Audio Modification Library  !"
   ui_print " "
-  sleep 3
 fi
 
 # Create the new scoped storage directory
