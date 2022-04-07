@@ -1,5 +1,4 @@
 
-[ "`getenforce`" == "Enforcing" ] && ENFORCE=true || ENFORCE=false
 NEWFOL="/storage/emulated/0/Android/data/com.pittvandewitt.viperfx/files"
 
 # Uninstall v4a app if installed
@@ -108,9 +107,14 @@ ui_print " "
 ui_print "- Installing ViPER4AndroidFX $(grep_prop version $MODPATH/module.prop)..."
 ui_print "   After this completes, reboot your device."
 ui_print " "
-$ENFORCE && setenforce 0
-(pm install $MODPATH/v4afx.apk >/dev/null 2>&1) || abort "Failed to install V4AFX!"
-$ENFORCE && setenforce 1
+APK_INSTALL_FOLDER="/data/local"
+(
+  cp -f "$MODPATH/v4afx.apk" "$APK_INSTALL_FOLDER/v4afx.apk" || exit 1
+  pm install $APK_INSTALL_FOLDER/v4afx.apk >/dev/null 2>&1
+  RET=$?
+  rm "$APK_INSTALL_FOLDER/v4afx.apk"
+  exit $RET
+) || abort "Failed to install V4AFX!"
 pm disable $VIPERFXPACKAGE >/dev/null 2>&1
 
 ui_print " "

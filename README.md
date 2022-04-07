@@ -16,12 +16,14 @@ It contains many useability enhancements and all the major fixes needed to run `
   This installer installs the ViPER driver seamlessly during module installation, there is no need to have the app install the driver.
 * **`MagiskPolicy` included** \
   The necessary `SELinux` rules for running on modern Android ROMs are included, there is no need for [`Audio Compatibility Patch`](https://github.com/Magisk-Modules-Repo/acp) anymore.
+* **Enforce the law** \
+  This installer does not require switching `SELinux` to `permissive` temporarily for installing the APK, which mostly helps with devices where `permissive` has disabled in the kernel.
 * **Old folder gone legacy** \
   The old folder `ViPER4Android` in your personal files has been redundant for long time already, as all files have been moved to the new scoped storage location anyways.
-  This installer does depend on the old folder anymore, you can safely delete it and not have it clutter your files anymore.
+  This installer doesn't depend on the old folder anymore, you can safely delete it and not have it clutter your files anymore.
 * **ViperFX, not AudioFX!** \
   Who needs [`LineageOS AudioFX`](https://github.com/LineageOS/android_packages_apps_AudioFX) anyways when you have `ViPER4Android` installed.
-  This installer automatically disables [`LineageOS AudioFX`](https://github.com/LineageOS/android_packages_apps_AudioFX) during install and also reenables in during uninstall.
+  This installer automatically disables [`LineageOS AudioFX`](https://github.com/LineageOS/android_packages_apps_AudioFX) during install and also reenables it during uninstall.
 * **To AML or not to AML** \
   [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) is not included, but is usually not needed either. But you can still combine `ViPER4Android` with other audio mods using [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) if you want to.
 * **Automatic VDC import** \
@@ -48,12 +50,12 @@ It contains many useability enhancements and all the major fixes needed to run `
 
 This mod is targeted at `LineageOS 19` / `Android 12`. \
 Any ROM similar or newer than `LineageOS 17` / `Android 10` should work. \
-With anything below that, you can still try it, but I can't guarantee anything there.
+With anything else you can still try it, but I can't guarantee anything there.
 
 ## Bugs and support
 
 I am not a ViPER dev, nor am I capable of fixing your broken install or ROM.
-If you have trouble to install ViPER4Android this way please do hesitate to ask me. 
+If you have trouble to install ViPER4Android this way, please **do hesitate** to ask me. 
 Try to install it the normal way and if that doesn't work either,
 ask in the 
 [ViPER4Android Telegram group](https://t.me/ViPER4AndroidFX) 
