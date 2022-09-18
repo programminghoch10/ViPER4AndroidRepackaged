@@ -76,14 +76,46 @@ killall audioserver
 
 
 ui_print " "
-ui_print "- Patching audio_effects.xml"
-mkdir -p $MODPATH/system/vendor/etc
-AUDIO_EFFECTS_FILE=$MODPATH/system/vendor/etc/audio_effects.xml
-cp -f /vendor/etc/audio_effects.xml $AUDIO_EFFECTS_FILE
-sed -i "/v4a_standard_fx/d" $AUDIO_EFFECTS_FILE
-sed -i "/v4a_fx/d" $AUDIO_EFFECTS_FILE
-sed -i "/<libraries>/ a\        <library name=\"v4a_fx\" path=\"libv4a_fx.so\"\/>" $AUDIO_EFFECTS_FILE
-sed -i "/<effects>/ a\        <effect name=\"v4a_standard_fx\" library=\"v4a_fx\" uuid=\"41d3c987-e6cf-11e3-a88a-11aba5d5c51b\"\/>" $AUDIO_EFFECTS_FILE
+ui_print "   Patching existing audio_effects files..."
+osp_detect() {
+  case "$1" in
+    *.conf) 
+      SPACES=$(sed -n "/^output_session_processing {/,/^}/ {/^ *music {/p}" $1 | sed -r "s/( *).*/\1/")
+      EFFECTS=$(sed -n "/^output_session_processing {/,/^}/ {/^$SPACES\music {/,/^$SPACES}/p}" $1 | grep -E "^$SPACES +[A-Za-z]+" | sed -r "s/( *.*) .*/\1/g")
+      for EFFECT in ${EFFECTS}; do
+        SPACES=$(sed -n "/^effects {/,/^}/ {/^ *$EFFECT {/p}" $1 | sed -r "s/( *).*/\1/")
+        [ "$EFFECT" != "atmos" ] && sed -i "/^effects {/,/^}/ {/^$SPACES$EFFECT {/,/^$SPACES}/ s/^/#/g}" $1
+      done
+      ;;
+     *.xml) 
+      EFFECTS=$(sed -n "/^ *<postprocess>$/,/^ *<\/postprocess>$/ {/^ *<stream type=\"music\">$/,/^ *<\/stream>$/ {/<stream type=\"music\">/d; /<\/stream>/d; s/<apply effect=\"//g; s/\"\/>//g; p}}" $1)
+      for EFFECT in ${EFFECTS}; do
+        [ "$EFFECT" != "atmos" ] && sed -ri "s/^( *)<apply effect=\"$EFFECT\"\/>/\1<\!--<apply effect=\"$EFFECT\"\/>-->/" $1
+      done
+      ;;
+  esac
+}
+AUDIO_EFFECTS_FILES="$(find /system /vendor -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml")"
+for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
+  ui_print "    Patching $ORIGINAL_FILE"
+  FILE="$MODPATH$(echo "$ORIGINAL_FILE" | sed "s|^/vendor|/system/vendor|g")"
+  cp_ch "$ORIGDIR$ORIGINAL_FILE" "$FILE"
+  osp_detect "$FILE"
+  case "$FILE" in
+    *.conf) 
+      sed -i "/v4a_standard_fx {/,/}/d" "$FILE"
+      sed -i "/v4a_fx {/,/}/d" "$FILE"
+      sed -i "s/^effects {/effects {\n  v4a_standard_fx {\n    library v4a_fx\n    uuid 41d3c987-e6cf-11e3-a88a-11aba5d5c51b\n  }/g" "$FILE"
+      sed -i "s/^libraries {/libraries {\n  v4a_fx {\n    path $LIBPATCH\/lib\/soundfx\/libv4a_fx.so\n  }/g" "$FILE"
+      ;;
+    *.xml) 
+      sed -i "/v4a_standard_fx/d" "$FILE"
+      sed -i "/v4a_fx/d" "$FILE"
+      sed -i "/<libraries>/ a\        <library name=\"v4a_fx\" path=\"libv4a_fx.so\"\/>" "$FILE"
+      sed -i "/<effects>/ a\        <effect name=\"v4a_standard_fx\" library=\"v4a_fx\" uuid=\"41d3c987-e6cf-11e3-a88a-11aba5d5c51b\"\/>" "$FILE"
+      ;;
+  esac
+done
 
 # here is how to strace v4a app:
 #  run adb root
