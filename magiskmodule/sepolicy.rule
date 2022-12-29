@@ -8,3 +8,4 @@ allow hal_audio_default hal_audio_default_tmpfs file { execute }
 allow hal_audio_default audio_data_file dir { search }
 allow app app_data_file file { execute_no_trans }
 allow mtk_hal_audio mtk_hal_audio_tmpfs file { execute }
+allow untrusted_app vendor_mot_audio_fx_prop file { read }
