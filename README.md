@@ -34,13 +34,15 @@ It contains many useability enhancements and all the major fixes needed to run `
 * **IRS ([tax](https://www.youtube.com/results?search_query=kitboga+irs+scammer)) included** \
   [The whole pack of IRS files](https://drive.google.com/file/d/1Bii6ER0cNgHMspVozMIfYfFAu3l16d_-/view?usp=sharing) commonly distributed in the [`ViPER4Android` Telegram group](https://t.me/ViPER4AndroidFX) is included and will be automatically copied to the correct place. You can select an IRS in the convolver option.
 * **`Legacy mode` for the win** \
-  To this day i don't see why one would want to have `Legacy mode` disabled.
+  To this day I don't see why one would want to have `Legacy mode` disabled.
   Yes I know it's because a media app should send it's audio session id, but to be honest: Who cares? 
   `Legacy mode` just always works reliably and this is why this installer enables it by default.
   Does anyone remember the time when this option was called "`Process audio session 0`"?
 * **Opt-in instead of Opt-out** \
   `ViPER4Android 2.7` comes with `Crashlytics bug report metrics` enabled by default. Personally I don't like to send bug reports, so I always disable it. I think Opt-in is the way to go here. 
   This is why in this module `Crashlytics` is disabled by default and you may enable if it you wish to.
+* **Keep the vibes alive** \
+  `ViPER4Android` will automatically be restarted if it gets killed. This may be of great convenience on low ram devices, where the OOM-killer is very aggressive, even towards foreground services.
 
 ## Install
 
