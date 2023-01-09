@@ -7,7 +7,7 @@ SDCARD="/storage/emulated/0"
 FOLDER="$SDCARD/Android/data/$VIPERFXPACKAGE/files"
 
 # Uninstall v4a app if installed
-[ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall "$VIPERFXPACKAGE" &>/dev/null
+[ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
 
 MODULEROOT="${MODPATH%/*}"
 NVBASE="${MODULEROOT%/*}"
