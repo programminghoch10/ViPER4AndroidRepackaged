@@ -18,14 +18,14 @@ rm ViPER4AndroidFX-repackaged* 2>/dev/null || true
 
 echo "Compressing Viper IRS files..."
 cd ViperIRS
-[ -f "../magiskmodule/common/ViperIRS.zip" ] && rm "../magiskmodule/common/ViperIRS.zip"
-zip -9 -q "../magiskmodule/common/ViperIRS.zip" *.irs
+[ -f "../magiskmodule/ViperIRS.zip" ] && rm "../magiskmodule/ViperIRS.zip"
+zip -9 -q "../magiskmodule/ViperIRS.zip" *.irs
 cd ..
 
 echo "Compressing Original VDC files..."
 cd OriginalVDCs
-[ -f "../magiskmodule/common/vdcs.zip" ] && rm "../magiskmodule/common/vdcs.zip"
-zip -9 -q "../magiskmodule/common/vdcs.zip" *.vdc
+[ -f "../magiskmodule/vdcs.zip" ] && rm "../magiskmodule/vdcs.zip"
+zip -9 -q "../magiskmodule/vdcs.zip" *.vdc
 cd ..
 
 echo "Compressing Magisk Module..."
