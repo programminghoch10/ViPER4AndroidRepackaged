@@ -2,6 +2,9 @@
 
 set -e -u
 
+GZIP=gzip
+[ -n "$(command -v pigz)" ] && GZIP=pigz
+
 [[ `git status --porcelain` ]] && CHANGES="+" || CHANGES="-"
 VERSIONCODE=$(git rev-list --count HEAD)
 REPACKAGEDSTRING="repackagedhoch$VERSIONCODE"
@@ -18,14 +21,16 @@ rm ViPER4AndroidFX-repackaged* 2>/dev/null || true
 
 echo "Compressing Viper IRS files..."
 cd ViperIRS
-[ -f "../magiskmodule/ViperIRS.zip" ] && rm "../magiskmodule/ViperIRS.zip"
-zip -9 -q "../magiskmodule/ViperIRS.zip" *.irs
+IRSFILE="../magiskmodule/ViperIRS.tar.gz"
+[ -f "$IRSFILE" ] && rm "$IRSFILE"
+tar -cf- *.irs | $GZIP --best > "$IRSFILE"
 cd ..
 
 echo "Compressing Original VDC files..."
 cd OriginalVDCs
-[ -f "../magiskmodule/vdcs.zip" ] && rm "../magiskmodule/vdcs.zip"
-zip -9 -q "../magiskmodule/vdcs.zip" *.vdc
+VDCFILE="../magiskmodule/ViperVDC.tar.gz"
+[ -f "$VDCFILE" ] && rm "$VDCFILE"
+tar -cf- *.vdc | $GZIP --best > "$VDCFILE"
 cd ..
 
 echo "Compressing Magisk Module..."

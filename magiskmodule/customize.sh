@@ -34,7 +34,7 @@ if [ $DDC_FOLDER_EMPTY = true ] && [ $CUSTOM_VDC_FOUND = false ]; then
   ui_print "   Check out here for better ones:"
   ui_print "   https://t.me/vdcservice"
   mkdir -p "$FOLDER"/DDC 2>/dev/null
-  unzip -oj "$MODPATH"/vdcs.zip -d "$FOLDER"/DDC >&2
+  tar -xzf "$MODPATH"/ViperVDC.tar.gz -C "$FOLDER"/DDC
 else 
   ui_print "  Skipping Viper original vdc copy"
   [ $DDC_FOLDER_EMPTY = false ] && ui_print "    the folder is not empty"
@@ -52,7 +52,7 @@ fi
 if [ -z "$(ls "$FOLDER"/Kernel 2>/dev/null)" ]; then
   ui_print "- Copying Viper IRS files"
   mkdir -p "$FOLDER"/Kernel 2>/dev/null
-  unzip -oj "$MODPATH"/ViperIRS.zip -d "$FOLDER"/Kernel >&2
+  tar -xzf "$MODPATH"/ViperIRS.tar.gz -C "$FOLDER"/Kernel
 else
   ui_print "- Skipping Viper IRS copy, folder is not empty"
 fi
