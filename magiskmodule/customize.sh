@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ $API -lt 23 ] && abort "The system API of $API is less than the minimum api of 23!"
+[ $API -lt 28 ] && abort "Android SDK $API is not supported!"
 
 VIPERFXPACKAGE="com.pittvandewitt.viperfx"
 SDCARD="/storage/emulated/0"
@@ -36,7 +36,7 @@ if [ $DDC_FOLDER_EMPTY = true ] && [ $CUSTOM_VDC_FOUND = false ]; then
   mkdir -p "$FOLDER"/DDC 2>/dev/null
   tar -xzf "$MODPATH"/ViperVDC.tar.gz -C "$FOLDER"/DDC
 else 
-  ui_print "  Skipping Viper original vdc copy"
+  ui_print "- Skipping Viper original vdc copy"
   [ $DDC_FOLDER_EMPTY = false ] && ui_print "    the folder is not empty"
   [ $CUSTOM_VDC_FOUND = true ] && ui_print "    custom vdcs have been found"
 fi
