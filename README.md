@@ -4,6 +4,18 @@ A refined ViPER4Android installer.
 This is an updated and enhanced `ViPER4Android FX 2.7` installer. \
 It contains many useability enhancements and all the major fixes needed to run `ViPER4Android` on modern ROMs effortlessly.
 
+![GitHub Latest Release (by date)](https://img.shields.io/github/v/release/programminghoch10/ViPER4AndroidRepackaged?label=latest&logo=github&display_name=release)
+![GitHub Latest Release Date](https://img.shields.io/github/release-date/programminghoch10/ViPER4AndroidRepackaged?logo=github)
+
+![GitHub Global Download Counter](https://img.shields.io/github/downloads/programminghoch10/Viper4AndroidRepackaged/total?logo=github)
+![GitHub Latest Download Counter](https://img.shields.io/github/downloads/programminghoch10/Viper4AndroidRepackaged/latest/total?logo=github)
+
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/programminghoch10/ViPER4AndroidRepackaged/build.yml?logo=github%20actions&logoColor=white)
+![GitHub last commit](https://img.shields.io/github/last-commit/programminghoch10/ViPER4AndroidRepackaged?logo=git&logoColor=white)
+
+![GitHub Repo stars](https://img.shields.io/github/stars/programminghoch10/ViPER4AndroidRepackaged?style=social)  
+[![GitHub followers](https://img.shields.io/github/followers/programminghoch10?style=social)](https://github.com/programminghoch10)
+
 ## Features
 
 * **Install `ViPER4Android` in one go** \
@@ -17,7 +29,7 @@ It contains many useability enhancements and all the major fixes needed to run `
 * **`MagiskPolicy` included** \
   The necessary `SELinux` rules for running on modern Android ROMs are included, there is no need for [`Audio Compatibility Patch`](https://github.com/Magisk-Modules-Repo/acp) anymore.
 * **Enforce the law** \
-  This installer does not require switching `SELinux` to `permissive` temporarily for installing the APK, which mostly helps with devices where `permissive` has disabled in the kernel.
+  This installer does not require switching `SELinux` to `permissive` temporarily for installing the APK, which mostly helps with devices where `permissive` has been disabled in the kernel.
 * **Old folder gone legacy** \
   The old folder `ViPER4Android` in your personal files has been redundant for long time already, as all files have been moved to the new scoped storage location anyways.
   This installer doesn't depend on the old folder anymore, you can safely delete it and not have it clutter your files anymore.
@@ -48,11 +60,17 @@ It contains many useability enhancements and all the major fixes needed to run `
 
 1. [Download the latest module ZIP from GitHub Releases](https://github.com/programminghoch10/ViPER4AndroidRepackaged/releases)
 1. Flash in [Magisk](https://github.com/topjohnwu/Magisk)/[Lygisk](https://github.com/programminghoch10/Lygisk)
-1. Reboot BEFORE opening the `ViPER4Android` app
+1. Reboot
 
-This mod is targeted at `LineageOS 19` / `Android 12`. \
-Any ROM similar or newer than `LineageOS 17` / `Android 10` should work. \
-With anything else you can still try it, but I can't guarantee anything there.
+The installer installs the `ViPER4Android` app for you. Don't install it yourself.
+
+This mod is targeted at `LineageOS 20`. \
+It has been tested to work on:
+* `LineageOS 16.0`
+* `LineageOS 17.1`
+* `LineageOS 18.1`
+* `LineageOS 19.1`
+* `LineageOS 20.0`
 
 ## Bugs and support
 

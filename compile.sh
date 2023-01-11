@@ -12,6 +12,7 @@ COMMITHASH=$(git log -1 --pretty=%h)
 VERSION=v$VERSIONCODE$CHANGES\($COMMITHASH\)
 
 cp -f module.prop magiskmodule/module.prop
+cp -f README.md magiskmodule/README.md
 sed -i "s/VERSION/$VERSION/g" magiskmodule/module.prop
 sed -i "s/VCODE/$VERSIONCODE/g" magiskmodule/module.prop
 sed -i "s/REPACKAGEDSTRING/$REPACKAGEDSTRING/g" magiskmodule/module.prop
