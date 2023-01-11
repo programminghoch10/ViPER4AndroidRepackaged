@@ -8,3 +8,7 @@ allow hal_audio_default hal_audio_default_tmpfs file { execute }
 allow hal_audio_default audio_data_file dir { search }
 allow app app_data_file file { execute_no_trans }
 allow mtk_hal_audio mtk_hal_audio_tmpfs file { execute }
+allow mtk_hal_audio sysfs_dt_firmware_android file { read }
+allow mtk_hal_audio mtk_hal_audio process { execmem }
+allow mtk_hal_audio metadata_file dir { search }
+allow mtk_hal_audio debugfs_ion dir { search }
