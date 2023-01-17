@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
     - name: Prepare files
@@ -16,7 +16,7 @@ jobs:
     - name: Compile
       run: ./compile.sh
     - name: Upload Result
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: ViPER4AndroidRepackaged.zip
         path: ViPER4AndroidFX-*.zip
