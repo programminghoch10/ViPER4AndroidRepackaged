@@ -79,7 +79,7 @@ LIBRARY_FILE="lib$EFFECT_NAME.so"
 LIBRARY_FILE_PATH="/system/vendor/lib/soundfx/$LIBRARY_FILE"
 AUDIO_EFFECTS_FILES="$( \
   find -H \
-  $SEARCH_ROOT/system $SEARCH_ROOT/vendor \
+  $SEARCH_ROOT/system $SEARCH_ROOT/vendor $SEARCH_ROOT/odm \
   -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml" \
   | sed "s|^$SEARCH_ROOT||" )"
 for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
