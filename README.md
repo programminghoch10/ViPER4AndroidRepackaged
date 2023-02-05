@@ -71,6 +71,7 @@ It has been tested to work on:
 * `LineageOS 18.1`
 * `LineageOS 19.1`
 * `LineageOS 20.0`
+* `OneUI 5.0`
 
 ## Bugs and support
 
