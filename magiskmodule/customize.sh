@@ -81,16 +81,6 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   esac
 done
 
-AUDIOFX_PACKAGE="org.lineageos.audiofx"
-if [ -n "$(pm list packages | grep "$AUDIOFX_PACKAGE")" ]; then
-  ui_print "- Disabling $AUDIOFX_PACKAGE"
-  if [ -n "$(pm list packages -d | grep "$AUDIOFX_PACKAGE")" ]; then
-    ui_print"    $AUDIOFX_PACKAGE is already disabled"
-  else 
-    pm disable "$AUDIOFX_PACKAGE"
-  fi
-fi
-
 ui_print "- Installing the ViPER4AndroidFX user app"
 APK_INSTALL_FOLDER="/data/local"
 (
@@ -110,6 +100,18 @@ VIPERFXSHAREDPREFS="$VIPERFXPREFS"/shared_prefs
 cp -f "$MODPATH"/viperfx_preferences.xml "$VIPERFXSHAREDPREFS"/"${VIPERFXPACKAGE}_preferences.xml"
 chown -R $VIPERFXPREFSOWNER:$VIPERFXPREFSOWNER "$VIPERFXPREFS"
 chown -R $VIPERFXPREFSOWNER "$FOLDER"
+
+IFS=$'\n'
+for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
+  package="$(echo "$packagedata" | cut -d'|' -f1)"
+  [ -z "$(pm list packages $package)" ] && continue
+  packagename="$(echo "$packagedata" | cut -d'|' -f2)"
+  ui_print "- Disabling $packagename"
+  package_apk="$(pm list packages -f $package | grep -E "package:.*=$package$" | sed "s/package:\(.*\)=$package/\1/")"
+  package_apk_dir="$(dirname "$package_apk" | sed -e 's|^/||' -e 's|^system/||')"
+  mkdir -p "$MODPATH"/system/"$package_apk_dir"
+  touch "$MODPATH"/system/"$package_apk_dir"/.replace
+done
 
 ui_print "- Setting Permissions"
 set_perm_recursive "$MODPATH" 0 0 0755 0644

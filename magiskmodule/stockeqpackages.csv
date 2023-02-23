@@ -1,0 +1,10 @@
+# This file lists stock audio equalizer packages.
+
+# Every package listed here will be queried in the package manager
+# and if it exists
+# the entire folder it is contained within will be completely removed
+
+# Format: package|friendlyname
+
+org.lineageos.audiofx|LineageOS AudioFX
+org.lineageos.dap|Dolby Atmos
