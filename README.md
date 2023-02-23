@@ -57,6 +57,10 @@ It contains many useability enhancements and all the major fixes needed to run `
   Measures have been put in place to ensure `ViPER4Android` doesn't get killed by the OOM-killer. 
   Though should `ViPER4Android` stop working anyways, will automatically be restarted.  
   This may be of great convenience on low ram devices, where the OOM-killer is very aggressive, even towards foreground services.
+* **I know you're doing fine** \
+  The notifications of `ViPER4Android` have been permanently disabled.
+  There is no need for this permanent cluttering of the notifications list. 
+  ([more](#where-is-the-notification))
 
 ## Install
 
@@ -84,6 +88,13 @@ ask in the
 or the 
 [ViPER4Android XDA Thread](https://forum.xda-developers.com/android/apps-games/app-viper4android-fx-2-6-0-0-t3774651) 
 instead.
+
+### Where is the notification?
+The notification has been disabled on purpose, 
+as I don't see the necessity of it.  
+I know the App-Info toggle to enable notifications does not work.  
+If you really need it, run this command:  
+`pm set-distracting-restriction com.pittvandewitt.viperfx`  
 
 ## Thanks
 

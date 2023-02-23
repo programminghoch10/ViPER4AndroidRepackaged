@@ -100,6 +100,13 @@ VIPERFXSHAREDPREFS="$VIPERFXPREFS"/shared_prefs
 cp -f "$MODPATH"/viperfx_preferences.xml "$VIPERFXSHAREDPREFS"/"${VIPERFXPACKAGE}_preferences.xml"
 chown -R $VIPERFXPREFSOWNER:$VIPERFXPREFSOWNER "$VIPERFXPREFS"
 chown -R $VIPERFXPREFSOWNER "$FOLDER"
+# this permanently hides the notifications without the possiblity of reenabling them
+[ $API -ge 31 ] && pm set-distracting-restriction --flag hide-notifications $VIPERFXPACKAGE
+[ $API -ge 33 ] && {
+  # this will tell android that the user made the final decision to not receive notifications
+  pm revoke $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS
+  pm set-permission-flags $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS user-fixed
+}
 
 IFS=$'\n'
 for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
