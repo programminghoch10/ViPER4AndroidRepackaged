@@ -54,7 +54,9 @@ It contains many useability enhancements and all the major fixes needed to run `
   `ViPER4Android 2.7` comes with `Crashlytics bug report metrics` enabled by default. Personally I don't like to send bug reports, so I always disable it. I think Opt-in is the way to go here. 
   This is why in this module `Crashlytics` is disabled by default and you may enable if it you wish to.
 * **Keep the vibes alive** \
-  `ViPER4Android` will automatically be restarted if it gets killed. This may be of great convenience on low ram devices, where the OOM-killer is very aggressive, even towards foreground services.
+  Measures have been put in place to ensure `ViPER4Android` doesn't get killed by the OOM-killer. 
+  Though should `ViPER4Android` stop working anyways, will automatically be restarted.  
+  This may be of great convenience on low ram devices, where the OOM-killer is very aggressive, even towards foreground services.
 
 ## Install
 

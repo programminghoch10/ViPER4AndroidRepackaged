@@ -6,10 +6,11 @@ waitUntilBootCompleted() {
   done
 }
 
+VIPERFXPACKAGE="com.pittvandewitt.viperfx"
+
 (
   waitUntilBootCompleted
   sleep 10
-  VIPERFXPACKAGE="com.pittvandewitt.viperfx"
   [ -n "$(pm list packages -d | grep $VIPERFXPACKAGE)" ] && pm enable $VIPERFXPACKAGE
 ) &
 
@@ -17,7 +18,9 @@ waitUntilBootCompleted() {
   waitUntilBootCompleted
   sleep 60
   while true; do
-    ps -A -w -o ARGS=CMD | grep -v grep | grep -q com.pittvandewitt.viperfx || am broadcast -a android.intent.action.BOOT_COMPLETED -p com.pittvandewitt.viperfx
+    PID=$(pidof $VIPERFXPACKAGE)
+    [ -z "$PID" ] && am broadcast -a android.intent.action.BOOT_COMPLETED -p $VIPERFXPACKAGE
+    [ -n "$PID" ] && echo -1000 > /proc/$PID/oom_score_adj
     sleep 15
   done
 ) &
