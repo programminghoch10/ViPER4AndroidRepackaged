@@ -5,17 +5,15 @@ set -e -u
 GZIP=gzip
 [ -n "$(command -v pigz)" ] && GZIP=pigz
 
-[[ `git status --porcelain` ]] && CHANGES="+" || CHANGES="-"
+[ -n "$(git status --porcelain)" ] && CHANGES="+" || CHANGES="-"
 VERSIONCODE=$(git rev-list --count HEAD)
 REPACKAGEDSTRING="repackagedhoch$VERSIONCODE"
 COMMITHASH=$(git log -1 --pretty=%h)
 VERSION=v$VERSIONCODE$CHANGES\($COMMITHASH\)
 
-cp -f module.prop magiskmodule/module.prop
 cp -f README.md magiskmodule/README.md
-sed -i "s/VERSION/$VERSION/g" magiskmodule/module.prop
-sed -i "s/VCODE/$VERSIONCODE/g" magiskmodule/module.prop
-sed -i "s/REPACKAGEDSTRING/$REPACKAGEDSTRING/g" magiskmodule/module.prop
+declare -x VERSION VERSIONCODE REPACKAGEDSTRING
+envsubst < module.prop > magiskmodule/module.prop
 
 OUTPUT_FILE="ViPER4AndroidFX-$REPACKAGEDSTRING$CHANGES$COMMITHASH.zip"
 rm ViPER4AndroidFX-repackaged* 2>/dev/null || true

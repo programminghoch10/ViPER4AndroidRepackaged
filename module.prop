@@ -1,7 +1,7 @@
 id=ViPER4AndroidFX
-name=ViPER4Android FX REPACKAGEDSTRING
-version=v2.7.2.1-VERSION
-versionCode=2721VCODE
+name=ViPER4Android FX $REPACKAGEDSTRING
+version=v2.7.2.1-$VERSION
+versionCode=2721$VERSIONCODE
 author=ViPER520, ZhuHang, Pittvandewitt, MrWhite214, programminghoch10
 description=ViPER4AndroidFX v2.7.x reborn & repackaged
 support=https://t.me/ViPER4AndroidFX
