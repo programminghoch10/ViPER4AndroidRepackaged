@@ -11,6 +11,7 @@ It contains many useability enhancements and all the major fixes needed to run `
 ![GitHub Latest Download Counter](https://img.shields.io/github/downloads/programminghoch10/Viper4AndroidRepackaged/latest/total?logo=github)
 
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/programminghoch10/ViPER4AndroidRepackaged/build.yml?logo=github%20actions&logoColor=white)
+![GitHub commits since last release](https://img.shields.io/github/commits-since/programminghoch10/ViPER4AndroidRepackaged/latest?logo=git&logoColor=white)
 ![GitHub last commit](https://img.shields.io/github/last-commit/programminghoch10/ViPER4AndroidRepackaged?logo=git&logoColor=white)
 
 ![GitHub Repo stars](https://img.shields.io/github/stars/programminghoch10/ViPER4AndroidRepackaged?style=social)  
@@ -72,11 +73,14 @@ The installer installs the `ViPER4Android` app for you. Don't install it yoursel
 
 This mod is targeted at `LineageOS 20`. \
 It has been tested to work on:
-* `LineageOS 16.0`
-* `LineageOS 17.1`
-* `LineageOS 18.1`
-* `LineageOS 19.1`
-* `LineageOS 20.0`
+* `LineageOS 16.0` on `s3ve3gjv`
+* `LineageOS 17.1` on `a5xelte`
+* `LineageOS 18.1` on `sailfish`
+* `LineageOS 19.1` on `dreamlte`
+* `LineageOS 20.0` on `beyond1lte`, `beyond2lte`
+
+_Please don't submit pull requests adding your device/ROM combination._  
+_I will only add devices which I can test myself._
 
 ## Bugs and support
 
