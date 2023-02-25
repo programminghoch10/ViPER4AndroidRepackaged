@@ -1,4 +1,3 @@
-* Automatic driver restarting
-* Internal clean up and install speed enhancements
-* Hopefully solve some permission issues
-* Keep ViPER4Android app data when reinstalling
+* Prevent OOM-killing of the driver
+* Change how stock equalizers are removed
+* Disable all ViPER4Android notifications automatically
