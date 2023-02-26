@@ -6,6 +6,7 @@ VIPERFXPACKAGE="com.pittvandewitt.viperfx"
 SDCARD="/storage/emulated/0"
 FOLDER="$SDCARD/Android/data/$VIPERFXPACKAGE/files"
 VIPERVDCFILE="ViperVDC.tar.gz"
+VIPERIRSFILE="ViperIRS.tar.gz"
 
 IFS=$'\n'
 SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
@@ -46,14 +47,32 @@ if $CUSTOM_VDC_FOUND; then
   done
 fi
 
-if [ -z "$(ls "$FOLDER"/Kernel 2>/dev/null)" ]; then
+[ ! -f "$MODPATH"/"$VIPERIRSFILE" ] && abort "Missing $VIPERIRSFILE"
+mkdir -p "$FOLDER"/Kernel
+CUSTOM_IRS_FILES=$(find $SDCARD -name '*.irs' -not -path "$SDCARD/Android/*")
+[ -n "$CUSTOM_IRS_FILES" ] && CUSTOM_IRS_FOUND=true || CUSTOM_IRS_FOUND=false
+for file in $(tar -tzf "$MODPATH"/"$VIPERIRSFILE") $CUSTOM_IRS_FILES; do
+  file="$FOLDER"/Kernel/"$file"
+  [ -f "$file" ] && rm "$file"
+done
+[ -z "$(ls -A "$FOLDER"/Kernel 2>/dev/null)" ] && IRS_FOLDER_EMPTY=true || IRS_FOLDER_EMPTY=false
+if $IRS_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND; then
   ui_print "- Copying Viper IRS files"
   mkdir -p "$FOLDER"/Kernel 2>/dev/null
-  tar -xzf "$MODPATH"/ViperIRS.tar.gz -C "$FOLDER"/Kernel
+  tar -xzf "$MODPATH"/"$VIPERIRSFILE" -C "$FOLDER"/Kernel
 else
-  ui_print "- Skipping Viper IRS copy, folder is not empty"
+  ui_print "- Skipping Viper IRS copy"
+  ! $IRS_FOLDER_EMPTY && ui_print "    the folder is not empty"
+  $CUSTOM_IRS_FOUND && ui_print "    custom IRS files have been found"
 fi
-rm "$MODPATH"/ViperIRS.zip 2>/dev/null
+rm "$MODPATH"/"$VIPERIRSFILE"
+if $CUSTOM_IRS_FOUND; then
+  ui_print "- Copying custom IRS files"
+  for file in $CUSTOM_IRS_FILES; do
+    ui_print "    $file"
+    cp -f "$file" "$FOLDER"/Kernel
+  done
+fi
 
 ui_print "- Patching system audio files"
 LIBRARY_NAME="v4a_standard_fx"

@@ -39,9 +39,13 @@ It contains many useability enhancements and all the major fixes needed to run `
   This installer automatically disables [`LineageOS AudioFX`](https://github.com/LineageOS/android_packages_apps_AudioFX) during install and also reenables it during uninstall.
 * **To AML or not to AML** \
   [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) is not included, but is usually not needed either. But you can still combine `ViPER4Android` with other audio mods using [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) if you want to.
-* **Automatic VDC import** \
-  If you have [bought a VDC file](https://t.me/vdcservice) which now lays in your Download directory, you don't have to copy it over manually.
-  The installer automatically finds and copies them to the correct place for `ViPER4Android` to find them and you to enjoy the audiophile feeling.
+* **Automatic VDC and IRS import** \
+  If you have [bought a VDC file](https://t.me/vdcservice) or downloaded an IRS file 
+  which now lays in your Download directory, 
+  you don't have to copy it over manually.
+  The installer automatically finds and copies them to the correct place 
+  for `ViPER4Android` to find them 
+  and for you to enjoy the audiophile feeling.
 * **Original DDCs included** \
   If you have not yet bought a VDC file, this installer will automatically install all original `ViPER4Android` DDC files for you to enjoy them until you notice you can [buy even better ones](https://t.me/vdcservice).
 * **IRS ([tax](https://www.youtube.com/results?search_query=kitboga+irs+scammer)) included** \
