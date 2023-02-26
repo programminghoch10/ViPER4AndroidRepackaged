@@ -25,7 +25,7 @@ if [ $DDC_FOLDER_EMPTY = true ] && [ $CUSTOM_VDC_FOUND = false ]; then
   ui_print "   https://t.me/vdcservice"
   mkdir -p "$FOLDER"/DDC 2>/dev/null
   tar -xzf "$MODPATH"/ViperVDC.tar.gz -C "$FOLDER"/DDC
-else 
+else
   ui_print "- Skipping Viper original vdc copy"
   [ $DDC_FOLDER_EMPTY = false ] && ui_print "    the folder is not empty"
   [ $CUSTOM_VDC_FOUND = true ] && ui_print "    custom vdcs have been found"
@@ -56,13 +56,13 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   mkdir -p "$(dirname $FILE)"
   cp "$ORIGINAL_FILE" "$FILE"
   case "$FILE" in
-    *.conf) 
+    *.conf)
       sed -i "/v4a_standard_fx {/,/}/d" "$FILE"
       sed -i "/v4a_fx {/,/}/d" "$FILE"
       sed -i "s/^effects {/effects {\n  v4a_standard_fx {\n    library v4a_fx\n    uuid 41d3c987-e6cf-11e3-a88a-11aba5d5c51b\n  }/g" "$FILE"
       sed -i "s/^libraries {/libraries {\n  v4a_fx {\n    path $LIBPATCH\/lib\/soundfx\/libv4a_fx.so\n  }/g" "$FILE"
       ;;
-    *.xml) 
+    *.xml)
       sed -i "/v4a_standard_fx/d" "$FILE"
       sed -i "/v4a_fx/d" "$FILE"
       sed -i "/<libraries>/ a\        <library name=\"v4a_fx\" path=\"libv4a_fx.so\"\/>" "$FILE"
@@ -111,5 +111,5 @@ done
 
 ui_print "- Setting Permissions"
 set_perm_recursive "$MODPATH" 0 0 0755 0644
-set_perm_recursive "$MODPATH"/system/vendor 0 0 0755 0644 u:object_r:vendor_file:s0  
+set_perm_recursive "$MODPATH"/system/vendor 0 0 0755 0644 u:object_r:vendor_file:s0
 [ -d "$MODPATH"/system/vendor/etc ] && set_perm_recursive "$MODPATH"/system/vendor/etc 0 0 0755 0644 u:object_r:vendor_configs_file:s0
