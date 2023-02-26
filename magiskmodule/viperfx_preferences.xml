@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <boolean name="36869" value="false" />
-    <boolean name="crashlytics" value="false" />
-    <boolean name="legacy_mode" value="true" />
+  <boolean name="36869" value="false" /> <!-- compatiblity mode -->
+  <boolean name="crashlytics" value="false" />
+  <boolean name="legacy_mode" value="true" />
 </map>
