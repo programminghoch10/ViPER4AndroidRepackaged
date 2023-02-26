@@ -7,6 +7,8 @@ SDCARD="/storage/emulated/0"
 FOLDER="$SDCARD/Android/data/$VIPERFXPACKAGE/files"
 
 IFS=$'\n'
+SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
+[ ! -d "$SEARCH_ROOT" ] && SEARCH_ROOT=/
 
 # Uninstall v4a app if installed
 [ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
@@ -54,24 +56,25 @@ EFFECT_NAME="v4a_fx"
 EFFECT_UUID="41d3c987-e6cf-11e3-a88a-11aba5d5c51b"
 LIBRARY_FILE="lib$EFFECT_NAME.so"
 LIBRARY_FILE_PATH="/system/vendor/lib/soundfx/$LIBRARY_FILE"
-AUDIO_EFFECTS_FILES="$(find /system /vendor -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml")"
+AUDIO_EFFECTS_FILES="$( \
+  find -H \
+  $SEARCH_ROOT/system $SEARCH_ROOT/vendor \
+  -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml" \
+  | sed "s|^$SEARCH_ROOT||" )"
 for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   ui_print "    Patching $ORIGINAL_FILE"
-  FILE="$MODPATH"/"$(sed -e 's|^/system/|/|g' -e 's|^/|/system/|' <<< "$ORIGINAL_FILE")"
+  FILE="$MODPATH"/"$(echo "$ORIGINAL_FILE" | sed -e 's|^/system/|/|g' -e 's|^/|/system/|')"
   mkdir -p "$(dirname $FILE)"
+  ORIGINAL_FILE="$SEARCH_ROOT"/"$ORIGINAL_FILE"
   case "$FILE" in
     *.conf)
       sed \
-        -e "/v4a_standard_fx {/,/}/d"
-        -e "/v4a_fx {/,/}/d"
         -e "s|^effects {|effects {\n  $LIBRARY_NAME {\n    library $EFFECT_NAME\n    uuid $EFFECT_UUID\n  }|" \
         -e "s|^libraries {|libraries {\n  $EFFECT_NAME {\n    path $LIBRARY_FILE_PATH\n  }|" \
         < "$ORIGINAL_FILE" > "$FILE"
       ;;
     *.xml)
       sed \
-        -e "/v4a_standard_fx/d"
-        -e "/v4a_fx/d"
         -e "s|<libraries>|<libraries>\n        <library name=\"$EFFECT_NAME\" path=\"$LIBRARY_FILE\"/>|" \
         -e "s|<effects>|<effects>\n        <effect name=\"$LIBRARY_NAME\" library=\"$EFFECT_NAME\" uuid=\"$EFFECT_UUID\"/>|" \
         < "$ORIGINAL_FILE" > "$FILE"
