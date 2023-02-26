@@ -5,6 +5,7 @@
 VIPERFXPACKAGE="com.pittvandewitt.viperfx"
 SDCARD="/storage/emulated/0"
 FOLDER="$SDCARD/Android/data/$VIPERFXPACKAGE/files"
+VIPERVDCFILE="ViperVDC.tar.gz"
 
 IFS=$'\n'
 SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
@@ -16,25 +17,29 @@ SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
 # Create the scoped storage directory
 mkdir -p "$FOLDER"
 
-[ ! -d "$FOLDER"/DDC ] && mkdir -p "$FOLDER"/DDC 2>/dev/null
-CUSTOM_VDC_FILES=$(find $SDCARD/ -name '*.vdc' -not -path "$SDCARD/Android/*")
+[ ! -f "$MODPATH"/"$VIPERVDCFILE" ] && abort "Missing $VIPERVDCFILE"
+mkdir -p "$FOLDER"/DDC
+CUSTOM_VDC_FILES=$(find $SDCARD -name '*.vdc' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_VDC_FILES" ] && CUSTOM_VDC_FOUND=true || CUSTOM_VDC_FOUND=false
-[ -z "$(ls "$FOLDER"/DDC 2>/dev/null)" ] && DDC_FOLDER_EMPTY=true || DDC_FOLDER_EMPTY=false
-if [ $DDC_FOLDER_EMPTY = true ] && [ $CUSTOM_VDC_FOUND = false ]; then
-  ui_print "- Copying original V4A vdcs"
+for file in $(tar -tzf "$MODPATH"/"$VIPERVDCFILE") $CUSTOM_VDC_FILES; do
+  file="$FOLDER"/DDC/"$file"
+  [ -f "$file" ] && rm "$file"
+done
+[ -z "$(ls -A "$FOLDER"/DDC 2>/dev/null)" ] && VDC_FOLDER_EMPTY=true || VDC_FOLDER_EMPTY=false
+if $VDC_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND; then
+  ui_print "- Copying original ViPER4Android VDCs"
   ui_print "   Note that some of these aren't that great"
-  ui_print "   Check out here for better ones:"
-  ui_print "   https://t.me/vdcservice"
+  ui_print "   Check out https://t.me/vdcservice for better ones"
   mkdir -p "$FOLDER"/DDC 2>/dev/null
-  tar -xzf "$MODPATH"/ViperVDC.tar.gz -C "$FOLDER"/DDC
+  tar -xzf "$MODPATH"/"$VIPERVDCFILE" -C "$FOLDER"/DDC
 else
-  ui_print "- Skipping Viper original vdc copy"
-  [ $DDC_FOLDER_EMPTY = false ] && ui_print "    the folder is not empty"
-  [ $CUSTOM_VDC_FOUND = true ] && ui_print "    custom vdcs have been found"
+  ui_print "- Skipping Viper original VDC copy"
+  ! $VDC_FOLDER_EMPTY && ui_print "    the folder is not empty"
+  $CUSTOM_VDC_FOUND && ui_print "    custom VDCs have been found"
 fi
-rm "$MODPATH"/vdcs.zip >/dev/null 2>&1
-if [ $CUSTOM_VDC_FOUND = true ]; then
-  ui_print "- Copying custom V4A vdcs"
+rm "$MODPATH"/"$VIPERVDCFILE"
+if $CUSTOM_VDC_FOUND; then
+  ui_print "- Copying custom VDCs"
   for file in $CUSTOM_VDC_FILES; do
     ui_print "    $file"
     cp -f "$file" "$FOLDER"/DDC
