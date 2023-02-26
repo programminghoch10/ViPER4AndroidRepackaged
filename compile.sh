@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -e -u
+IFS=$'\n'
 
 GZIP=gzip
 [ -n "$(command -v pigz)" ] && GZIP=pigz
@@ -16,25 +17,30 @@ declare -x VERSION VERSIONCODE REPACKAGEDSTRING
 envsubst < module.prop > magiskmodule/module.prop
 
 OUTPUT_FILE="ViPER4AndroidFX-$REPACKAGEDSTRING$CHANGES$COMMITHASH.zip"
-rm ViPER4AndroidFX-repackaged* 2>/dev/null || true
+rm ViPER4AndroidFX-repackaged*.zip 2>/dev/null || true
+
+compressFiles() {
+  local files="$(basename "$1")"
+  local folder="$(dirname "$1")"
+  local targetarchive="$2"
+  (
+    cd "$folder"
+    tar -cf- $files | $GZIP --best > "../$targetarchive"
+  )
+}
 
 echo "Compressing Viper IRS files..."
-cd ViperIRS
-IRSFILE="../magiskmodule/ViperIRS.tar.gz"
-[ -f "$IRSFILE" ] && rm "$IRSFILE"
-tar -cf- *.irs | $GZIP --best > "$IRSFILE"
-cd ..
+compressFiles ViperIRS/"*.irs" magiskmodule/ViperIRS.tar.gz &
 
 echo "Compressing Original VDC files..."
-cd OriginalVDCs
-VDCFILE="../magiskmodule/ViperVDC.tar.gz"
-[ -f "$VDCFILE" ] && rm "$VDCFILE"
-tar -cf- *.vdc | $GZIP --best > "$VDCFILE"
-cd ..
+compressFiles OriginalVDCs/"*.vdc" magiskmodule/ViperVDC.tar.gz &
+
+wait
 
 echo "Compressing Magisk Module..."
-cd magiskmodule
-zip -r -9 -q "../$OUTPUT_FILE" .
-cd ..
+(
+  cd magiskmodule
+  zip -r -9 -q "../$OUTPUT_FILE" .
+)
 
 echo "Done"
