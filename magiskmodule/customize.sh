@@ -25,7 +25,7 @@ fi
 mkdir -p "$FOLDER"
 
 [ ! -d "$FOLDER"/DDC ] && mkdir -p "$FOLDER"/DDC 2>/dev/null
-CUSTOM_VDC_FILES=$(find $SDCARD/ -name '*.vdc' -not -path "$SDCARD/Android/*" -not -path "$SDCARD/$(grep_prop id $MODPATH/module.prop)/*")
+CUSTOM_VDC_FILES=$(find $SDCARD/ -name '*.vdc' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_VDC_FILES" ] && CUSTOM_VDC_FOUND=true || CUSTOM_VDC_FOUND=false
 [ -z "$(ls "$FOLDER"/DDC 2>/dev/null)" ] && DDC_FOLDER_EMPTY=true || DDC_FOLDER_EMPTY=false
 if [ $DDC_FOLDER_EMPTY = true ] && [ $CUSTOM_VDC_FOUND = false ]; then
