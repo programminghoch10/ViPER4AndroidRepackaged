@@ -118,6 +118,6 @@ for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackag
 done
 
 ui_print "- Setting Permissions"
-set_perm_recursive "$MODPATH" 0 0 0755 0644
+set_perm_recursive "$MODPATH"/system 0 0 0755 0644
 set_perm_recursive "$MODPATH"/system/vendor 0 0 0755 0644 u:object_r:vendor_file:s0
 [ -d "$MODPATH"/system/vendor/etc ] && set_perm_recursive "$MODPATH"/system/vendor/etc 0 0 0755 0644 u:object_r:vendor_configs_file:s0
