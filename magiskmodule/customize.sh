@@ -12,9 +12,6 @@ IFS=$'\n'
 SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
 [ ! -d "$SEARCH_ROOT" ] && SEARCH_ROOT=/
 
-# Uninstall v4a app if installed
-[ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
-
 # Create the scoped storage directory
 mkdir -p "$FOLDER"
 
@@ -107,15 +104,18 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
 done
 
 ui_print "- Installing the ViPER4AndroidFX user app"
-APK_INSTALL_FOLDER="/data/local"
-(
-  cp -f "$MODPATH"/v4afx.apk "$APK_INSTALL_FOLDER"/v4afx.apk || exit 1
-  pm install "$APK_INSTALL_FOLDER"/v4afx.apk &>/dev/null
-  RET=$?
-  rm "$APK_INSTALL_FOLDER"/v4afx.apk
-  exit $RET
-) || abort "Failed to install V4AFX!"
-pm disable "$VIPERFXPACKAGE" &>/dev/null
+APK=v4afx.apk
+[ -n "$(pm list packages | grep "^package:$VIPERFXPACKAGE$")" ] && APK_UPGRADE=true || APK_UPGRADE=false
+APK_SIZE=$(stat -c %s "$MODPATH"/"$APK")
+installAPK() {
+  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S $APK_SIZE < "$MODPATH"/"$APK" &>/dev/null
+}
+installAPK || {
+  $APK_UPGRADE && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
+  APK_UPGRADE=false
+  installAPK
+} || abort "Failed to install V4AFX!"
+! $APK_UPGRADE && pm disable "$VIPERFXPACKAGE" &>/dev/null
 
 ui_print "- Configuring ViPER4Android"
 VIPERFXPREFS="$(pm dump "$VIPERFXPACKAGE" | grep dataDir | head -n 1 | cut -d'=' -f2)"
