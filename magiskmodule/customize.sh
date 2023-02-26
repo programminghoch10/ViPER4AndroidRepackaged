@@ -111,13 +111,29 @@ chown -R $VIPERFXPREFSOWNER "$FOLDER"
 
 for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
   package="$(echo "$packagedata" | cut -d'|' -f1)"
-  [ -z "$(pm list packages $package)" ] && continue
-  packagename="$(echo "$packagedata" | cut -d'|' -f2)"
-  ui_print "- Disabling $packagename"
-  package_apk="$(pm list packages -f $package | grep -E "package:.*=$package$" | sed "s/package:\(.*\)=$package/\1/")"
-  package_apk_dir="$(dirname "$package_apk" | sed -e 's|^/||' -e 's|^system/||')"
-  mkdir -p "$MODPATH"/system/"$package_apk_dir"
-  touch "$MODPATH"/system/"$package_apk_dir"/.replace
+  package_filename="$(echo "$packagedata" | cut -d'|' -f2)"
+  package_friendlyname="$(echo "$packagedata" | cut -d'|' -f3)"
+  [ -n "$(pm list packages | grep "^package:$package$")" ] && {
+    ui_print "- Disabling $package_friendlyname (p)"
+    package_apk="$(pm list packages -f $package | grep -E "package:.*=$package$" | sed "s/package:\(.*\)=$package/\1/")"
+    package_apk_dir="$(dirname "$package_apk" | sed -e 's|^/||' -e 's|^system/||')"
+    mkdir -p "$MODPATH"/system/"$package_apk_dir"
+    touch "$MODPATH"/system/"$package_apk_dir"/"$(basename "$package_apk")"
+    continue
+  }
+  package_apk_files="$(find -H \
+      $SEARCH_ROOT/system $SEARCH_ROOT/system_ext $SEARCH_ROOT/vendor $SEARCH_ROOT/product \
+      -type f -name "$package_filename" \
+      | sed -e "s|^$SEARCH_ROOT||" -e 's|^/system/|/|' \
+      | uniq )"
+  [ -n "$package_apk_files" ] && {
+    ui_print "- Disabling $package_friendlyname (f)"
+    for package_apk in $package_apk_files; do
+      package_apk_dir="$(dirname "$package_apk" | sed -e 's|^/||' -e 's|^system/||')"
+      mkdir -p "$MODPATH"/system/"$package_apk_dir"
+      touch "$MODPATH"/system/"$package_apk_dir"/"$(basename "$package_apk")"
+    done
+  }
 done
 
 ui_print "- Setting Permissions"

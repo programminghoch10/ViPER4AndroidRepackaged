@@ -1,10 +1,10 @@
-# This file lists stock audio equalizer packages.
+# This file lists stock audio equalizer packages and files.
 
-# Every package listed here will be queried in the package manager
-# and if it exists
-# the entire folder it is contained within will be completely removed
+# Format: package|filename|friendlyname
+#   package:        used for querying package manager to find apk location
+#   filename:       used for searching in root, will replace every file with this name
+#   friendlyname:   what will be shown to the user during install
+# found files will be replaced with an empty file
 
-# Format: package|friendlyname
-
-org.lineageos.audiofx|LineageOS AudioFX
-org.lineageos.dap|Dolby Atmos
+org.lineageos.audiofx|AudioFX.apk|LineageOS AudioFX
+org.lineageos.dap|SamsungDAP.apk|Dolby Atmos
