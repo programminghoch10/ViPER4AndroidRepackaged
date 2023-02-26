@@ -100,7 +100,7 @@ VIPERFXSHAREDPREFS="$VIPERFXPREFS"/shared_prefs
 [ ! -d "$VIPERFXSHAREDPREFS" ] && mkdir "$VIPERFXSHAREDPREFS"
 cp -f "$MODPATH"/viperfx_preferences.xml "$VIPERFXSHAREDPREFS"/"${VIPERFXPACKAGE}_preferences.xml"
 chown -R $VIPERFXPREFSOWNER:$VIPERFXPREFSOWNER "$VIPERFXPREFS"
-chown -R $VIPERFXPREFSOWNER "$FOLDER"
+set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:sdcardfs:s0
 # this permanently hides the notifications without the possiblity of reenabling them
 [ $API -ge 31 ] && pm set-distracting-restriction --flag hide-notifications $VIPERFXPACKAGE
 [ $API -ge 33 ] && {
@@ -137,6 +137,6 @@ for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackag
 done
 
 ui_print "- Setting Permissions"
-set_perm_recursive "$MODPATH"/system 0 0 0755 0644
-set_perm_recursive "$MODPATH"/system/vendor 0 0 0755 0644 u:object_r:vendor_file:s0
-[ -d "$MODPATH"/system/vendor/etc ] && set_perm_recursive "$MODPATH"/system/vendor/etc 0 0 0755 0644 u:object_r:vendor_configs_file:s0
+set_perm_recursive "$MODPATH"/system root root 755 644
+set_perm_recursive "$MODPATH"/system/vendor root root 755 644 u:object_r:vendor_file:s0
+[ -d "$MODPATH"/system/vendor/etc ] && set_perm_recursive "$MODPATH"/system/vendor/etc root root 755 644 u:object_r:vendor_configs_file:s0
