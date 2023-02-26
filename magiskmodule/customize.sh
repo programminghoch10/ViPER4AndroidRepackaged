@@ -49,24 +49,32 @@ fi
 rm "$MODPATH"/ViperIRS.zip 2>/dev/null
 
 ui_print "- Patching system audio files"
+LIBRARY_NAME="v4a_standard_fx"
+EFFECT_NAME="v4a_fx"
+EFFECT_UUID="41d3c987-e6cf-11e3-a88a-11aba5d5c51b"
+LIBRARY_FILE="lib$EFFECT_NAME.so"
+LIBRARY_FILE_PATH="/system/vendor/lib/soundfx/$LIBRARY_FILE"
 AUDIO_EFFECTS_FILES="$(find /system /vendor -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml")"
 for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   ui_print "    Patching $ORIGINAL_FILE"
-  FILE="$MODPATH$(echo "$ORIGINAL_FILE" | sed "s|^/vendor|/system/vendor|g")"
+  FILE="$MODPATH"/"$(sed -e 's|^/system/|/|g' -e 's|^/|/system/|' <<< "$ORIGINAL_FILE")"
   mkdir -p "$(dirname $FILE)"
-  cp "$ORIGINAL_FILE" "$FILE"
   case "$FILE" in
     *.conf)
-      sed -i "/v4a_standard_fx {/,/}/d" "$FILE"
-      sed -i "/v4a_fx {/,/}/d" "$FILE"
-      sed -i "s/^effects {/effects {\n  v4a_standard_fx {\n    library v4a_fx\n    uuid 41d3c987-e6cf-11e3-a88a-11aba5d5c51b\n  }/g" "$FILE"
-      sed -i "s/^libraries {/libraries {\n  v4a_fx {\n    path $LIBPATCH\/lib\/soundfx\/libv4a_fx.so\n  }/g" "$FILE"
+      sed \
+        -e "/v4a_standard_fx {/,/}/d"
+        -e "/v4a_fx {/,/}/d"
+        -e "s|^effects {|effects {\n  $LIBRARY_NAME {\n    library $EFFECT_NAME\n    uuid $EFFECT_UUID\n  }|" \
+        -e "s|^libraries {|libraries {\n  $EFFECT_NAME {\n    path $LIBRARY_FILE_PATH\n  }|" \
+        < "$ORIGINAL_FILE" > "$FILE"
       ;;
     *.xml)
-      sed -i "/v4a_standard_fx/d" "$FILE"
-      sed -i "/v4a_fx/d" "$FILE"
-      sed -i "/<libraries>/ a\        <library name=\"v4a_fx\" path=\"libv4a_fx.so\"\/>" "$FILE"
-      sed -i "/<effects>/ a\        <effect name=\"v4a_standard_fx\" library=\"v4a_fx\" uuid=\"41d3c987-e6cf-11e3-a88a-11aba5d5c51b\"\/>" "$FILE"
+      sed \
+        -e "/v4a_standard_fx/d"
+        -e "/v4a_fx/d"
+        -e "s|<libraries>|<libraries>\n        <library name=\"$EFFECT_NAME\" path=\"$LIBRARY_FILE\"/>|" \
+        -e "s|<effects>|<effects>\n        <effect name=\"$LIBRARY_NAME\" library=\"$EFFECT_NAME\" uuid=\"$EFFECT_UUID\"/>|" \
+        < "$ORIGINAL_FILE" > "$FILE"
       ;;
   esac
 done
