@@ -6,6 +6,8 @@ VIPERFXPACKAGE="com.pittvandewitt.viperfx"
 SDCARD="/storage/emulated/0"
 FOLDER="$SDCARD/Android/data/$VIPERFXPACKAGE/files"
 
+IFS=$'\n'
+
 # Uninstall v4a app if installed
 [ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
 
@@ -108,7 +110,6 @@ chown -R $VIPERFXPREFSOWNER "$FOLDER"
   pm set-permission-flags $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS user-fixed
 }
 
-IFS=$'\n'
 for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
   package="$(echo "$packagedata" | cut -d'|' -f1)"
   [ -z "$(pm list packages $package)" ] && continue
