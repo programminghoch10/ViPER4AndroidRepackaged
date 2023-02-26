@@ -11,18 +11,6 @@ IFS=$'\n'
 # Uninstall v4a app if installed
 [ -n "$(pm list packages | grep "$VIPERFXPACKAGE")" ] && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
 
-MODULEROOT="${MODPATH%/*}"
-NVBASE="${MODULEROOT%/*}"
-# Tell user aml is needed if applicable
-FILES=$(find "$NVBASE"/modules/*/system "$MODULEROOT"/*/system -type f -name "*audio_effects*.conf" -o -name "*audio_effects*.xml" -not -path "$NVBASE/modules/ViPER4AndroidFX/*" 2>/dev/null | sed "/ViPER4AndroidFX/d")
-if [ ! -z "$FILES" ] && [ ! "$(echo $FILES | grep '/aml/')" ]; then
-  ui_print " "
-  ui_print "   ! Conflicting audio mod found !"
-  ui_print "   ! You will need to install    !"
-  ui_print "   ! Audio Modification Library  !"
-  ui_print " "
-fi
-
 # Create the scoped storage directory
 mkdir -p "$FOLDER"
 
