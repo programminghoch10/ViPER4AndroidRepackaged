@@ -11,10 +11,6 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
-  // markdown
-  "[markdown]": {
-    "files.trimTrailingWhitespace": false
-  },
   // html / xml
   "html.format.enable": true,
   "html.format.indentInnerHtml": true,
