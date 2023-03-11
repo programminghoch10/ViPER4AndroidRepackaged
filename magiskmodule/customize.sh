@@ -85,6 +85,7 @@ AUDIO_EFFECTS_FILES="$( \
 for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   ui_print "    Patching $ORIGINAL_FILE"
   FILE="$MODPATH"/"$(echo "$ORIGINAL_FILE" | sed -e 's|^/system/|/|g' -e 's|^/|/system/|')"
+  [ -f "$FILE" ] && continue
   mkdir -p "$(dirname $FILE)"
   ORIGINAL_FILE="$SEARCH_ROOT"/"$ORIGINAL_FILE"
   case "$FILE" in
