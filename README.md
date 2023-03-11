@@ -37,6 +37,12 @@ It contains many useability enhancements and all the major fixes needed to run `
 * **ViperFX, not AudioFX!** \
   Who needs [`LineageOS AudioFX`](https://github.com/LineageOS/android_packages_apps_AudioFX) anyways when you have `ViPER4Android` installed.
   This installer automatically disables [`LineageOS AudioFX`](https://github.com/LineageOS/android_packages_apps_AudioFX) during install and also reenables it during uninstall.
+* **Viper Atmos** \
+  [Experience breakthrough audio that flows above and around you](https://github.com/LineageOS/android_hardware_samsung/blob/2359bd00227d706a9dda5378e7537b2e43e3c965/dap/res/values/strings.xml#L10) 
+  with `ViPER4Android`. \
+  `Dolby Atmos` has become a simple 
+  [marketing term](https://www.youtube.com/watch?v=ua-JnXlDcTU) 
+  anyways, you don't need it anymore, you got somethin' better now!
 * **To AML or not to AML** \
   [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) is not included, but is usually not needed either. But you can still combine `ViPER4Android` with other audio mods using [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) if you want to.
 * **Automatic VDC and IRS import** \
