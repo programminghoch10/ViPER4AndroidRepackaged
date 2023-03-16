@@ -1,0 +1,25 @@
+
+android_app_import {
+    name: "ViPER4AndroidRepackaged",
+    apk: "v4afx.apk",
+
+    privileged: true,
+    certificate: "platform",
+    system_ext_specific: true,
+
+    dex_preopt: {
+        enabled: false,
+    },
+
+    overrides: ["MusicFX", "AudioFX"],
+
+    required: ["privapp_permissions_com.pittvandewitt.viperfx"],
+}
+
+prebuilt_etc {
+    name: "privapp_permissions_com.pittvandewitt.viperfx",
+    src: "privapp_permissions_com.pittvandewitt.viperfx.xml",
+    system_ext_specific: true,
+    sub_dir: "permissions",
+    filename_from_src: true,
+}
