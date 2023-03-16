@@ -4,7 +4,7 @@ android_app_import {
     apk: "v4afx.apk",
 
     privileged: true,
-    certificate: "platform",
+    presigned: true,
     system_ext_specific: true,
 
     dex_preopt: {
