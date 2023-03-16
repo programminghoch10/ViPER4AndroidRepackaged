@@ -1,0 +1,23 @@
+{
+  // editor and files config
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "editor.wordWrap": "off",
+  "editor.detectIndentation": false,
+  "editor.trimAutoWhitespace": true,
+  "editor.autoIndent": "full",
+  "editor.renderWhitespace": "trailing",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  // html / xml
+  "html.format.enable": true,
+  "html.format.indentInnerHtml": true,
+  "html.format.endWithNewline": true,
+  "html.format.wrapAttributes": "preserve-aligned",
+  "html.format.preserveNewLines": false,
+  "files.associations": {
+    "*.xml": "html",
+  },
+}
