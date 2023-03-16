@@ -1,4 +1,34 @@
 
+cc_prebuilt_library_shared {
+	name: "libv4a_fx",
+	strip: {
+		none: true,
+	},
+	target: {
+		android_arm: {
+			srcs: ["vendor/lib/soundfx/libv4a_fx.so"],
+		},
+	},
+	compile_multilib: "32",
+	check_elf_files: false,
+	prefer: true,
+}
+
+cc_prebuilt_library_shared {
+	name: "libstdc++",
+	strip: {
+		none: true,
+	},
+	target: {
+		android_arm: {
+			srcs: ["vendor/lib/libstdc++.so"],
+		},
+	},
+	compile_multilib: "32",
+	check_elf_files: false,
+	prefer: true,
+}
+
 android_app_import {
     name: "ViPER4AndroidRepackaged",
     apk: "v4afx.apk",
@@ -16,10 +46,12 @@ android_app_import {
     required: [
         "privapp_permissions_com.pittvandewitt.viperfx",
         "privapp_allowlist_com.pittvandewitt.viperfx",
+        "libv4a_fx",
+        "libstdc++",
     ],
 }
 
-prebuilt_etc {
+prebuilt_etc_xml {
     name: "privapp_permissions_com.pittvandewitt.viperfx",
     src: "privapp_permissions_com.pittvandewitt.viperfx.xml",
     system_ext_specific: true,
@@ -27,7 +59,7 @@ prebuilt_etc {
     filename_from_src: true,
 }
 
-prebuilt_etc {
+prebuilt_etc_xml {
     name: "privapp_allowlist_com.pittvandewitt.viperfx",
     src: "privapp_allowlist_com.pittvandewitt.viperfx.xml",
     system_ext_specific: true,
