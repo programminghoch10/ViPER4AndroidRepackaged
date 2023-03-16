@@ -13,7 +13,10 @@ android_app_import {
 
     overrides: ["MusicFX", "AudioFX"],
 
-    required: ["privapp_permissions_com.pittvandewitt.viperfx"],
+    required: [
+        "privapp_permissions_com.pittvandewitt.viperfx",
+        "privapp_allowlist_com.pittvandewitt.viperfx",
+    ],
 }
 
 prebuilt_etc {
@@ -21,5 +24,13 @@ prebuilt_etc {
     src: "privapp_permissions_com.pittvandewitt.viperfx.xml",
     system_ext_specific: true,
     sub_dir: "permissions",
+    filename_from_src: true,
+}
+
+prebuilt_etc {
+    name: "privapp_allowlist_com.pittvandewitt.viperfx",
+    src: "privapp_allowlist_com.pittvandewitt.viperfx.xml",
+    system_ext_specific: true,
+    sub_dir: "sysconfig",
     filename_from_src: true,
 }
