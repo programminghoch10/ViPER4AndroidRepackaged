@@ -53,7 +53,7 @@ for file in $(tar -tzf "$MODPATH"/"$VIPERIRSFILE") $CUSTOM_IRS_FILES; do
   [ -f "$file" ] && rm "$file"
 done
 [ -z "$(ls -A "$FOLDER"/Kernel 2>/dev/null)" ] && IRS_FOLDER_EMPTY=true || IRS_FOLDER_EMPTY=false
-if $IRS_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND; then
+if $IRS_FOLDER_EMPTY && ! $CUSTOM_IRS_FOUND; then
   ui_print "- Copying Viper IRS files"
   mkdir -p "$FOLDER"/Kernel 2>/dev/null
   tar -xzf "$MODPATH"/"$VIPERIRSFILE" -C "$FOLDER"/Kernel
