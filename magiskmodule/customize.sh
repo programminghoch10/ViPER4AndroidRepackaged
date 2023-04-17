@@ -133,6 +133,8 @@ set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:s
   pm revoke $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS
   pm set-permission-flags $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS user-fixed
 }
+# this disables battery optimization
+[ $API -ge 30 ] && dumpsys deviceidle whitelist +$VIPERFXPACKAGE >/dev/null
 
 for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
   package="$(echo "$packagedata" | cut -d'|' -f1)"
