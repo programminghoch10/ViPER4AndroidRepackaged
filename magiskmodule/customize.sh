@@ -110,6 +110,7 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
       ;;
   esac
 done
+[ -z "$AUDIO_EFFECTS_FILES" ] && abort "Cant find any system audio configs!"
 
 ui_print "- Installing the ViPER4AndroidFX user app"
 APK="$MODPATH"/v4afx.apk
