@@ -112,11 +112,12 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
 done
 
 ui_print "- Installing the ViPER4AndroidFX user app"
-APK=v4afx.apk
+APK="$MODPATH"/v4afx.apk
+[ ! -f "$APK" ] && abort "Missing ViPER4Android APK!"
 [ -n "$(pm list packages | grep "^package:$VIPERFXPACKAGE$")" ] && APK_UPGRADE=true || APK_UPGRADE=false
-APK_SIZE=$(stat -c %s "$MODPATH"/"$APK")
+APK_SIZE=$(stat -c %s "$APK")
 installAPK() {
-  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S $APK_SIZE < "$MODPATH"/"$APK" &>/dev/null
+  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S $APK_SIZE < "$APK" &>/dev/null
 }
 installAPK || {
   $APK_UPGRADE && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
