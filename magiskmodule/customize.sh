@@ -12,19 +12,24 @@ IFS=$'\n'
 SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
 [ ! -d "$SEARCH_ROOT" ] && SEARCH_ROOT=/
 
+rmi() {
+  local file="$1"
+  [ -f "$file" ] && rm "$file"
+}
+
 # Create the scoped storage directory
 mkdir -p "$FOLDER"
 
-[ ! -f "$MODPATH"/"$VIPERVDCFILE" ] && abort "Missing $VIPERVDCFILE"
 mkdir -p "$FOLDER"/DDC
 CUSTOM_VDC_FILES=$(find $SDCARD -name '*.vdc' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_VDC_FILES" ] && CUSTOM_VDC_FOUND=true || CUSTOM_VDC_FOUND=false
+[ -f "$MODPATH"/"$VIPERVDCFILE" ] && ORIGINAL_VDC_ARCHIVE_FOUND=true || ORIGINAL_VDC_ARCHIVE_FOUND=false
 for file in $(tar -tzf "$MODPATH"/"$VIPERVDCFILE") $CUSTOM_VDC_FILES; do
   file="$FOLDER"/DDC/"$file"
-  [ -f "$file" ] && rm "$file"
+  rmi "$file"
 done
 [ -z "$(ls -A "$FOLDER"/DDC 2>/dev/null)" ] && VDC_FOLDER_EMPTY=true || VDC_FOLDER_EMPTY=false
-if $VDC_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND; then
+if $VDC_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND && $ORIGINAL_VDC_ARCHIVE_FOUND; then
   ui_print "- Copying original ViPER4Android VDCs"
   ui_print "   Note that some of these aren't that great"
   ui_print "   Check out https://t.me/vdcservice for better ones"
@@ -34,8 +39,9 @@ else
   ui_print "- Skipping Viper original VDC copy"
   ! $VDC_FOLDER_EMPTY && ui_print "    the folder is not empty"
   $CUSTOM_VDC_FOUND && ui_print "    custom VDCs have been found"
+  ! $ORIGINAL_VDC_ARCHIVE_FOUND && ui_print "    the required data couldn't be located"
 fi
-rm "$MODPATH"/"$VIPERVDCFILE"
+rmi "$MODPATH"/"$VIPERVDCFILE"
 if $CUSTOM_VDC_FOUND; then
   ui_print "- Copying custom VDCs"
   for file in $CUSTOM_VDC_FILES; do
@@ -44,16 +50,16 @@ if $CUSTOM_VDC_FOUND; then
   done
 fi
 
-[ ! -f "$MODPATH"/"$VIPERIRSFILE" ] && abort "Missing $VIPERIRSFILE"
 mkdir -p "$FOLDER"/Kernel
 CUSTOM_IRS_FILES=$(find $SDCARD -name '*.irs' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_IRS_FILES" ] && CUSTOM_IRS_FOUND=true || CUSTOM_IRS_FOUND=false
+[ -f "$MODPATH"/"$VIPERIRSFILE" ] && IRS_ARCHIVE_FOUND=true || IRS_ARCHIVE_FOUND=false
 for file in $(tar -tzf "$MODPATH"/"$VIPERIRSFILE") $CUSTOM_IRS_FILES; do
   file="$FOLDER"/Kernel/"$file"
-  [ -f "$file" ] && rm "$file"
+  rmi "$file"
 done
 [ -z "$(ls -A "$FOLDER"/Kernel 2>/dev/null)" ] && IRS_FOLDER_EMPTY=true || IRS_FOLDER_EMPTY=false
-if $IRS_FOLDER_EMPTY && ! $CUSTOM_IRS_FOUND; then
+if $IRS_FOLDER_EMPTY && ! $CUSTOM_IRS_FOUND && $IRS_ARCHIVE_FOUND; then
   ui_print "- Copying Viper IRS files"
   mkdir -p "$FOLDER"/Kernel 2>/dev/null
   tar -xzf "$MODPATH"/"$VIPERIRSFILE" -C "$FOLDER"/Kernel
@@ -61,8 +67,9 @@ else
   ui_print "- Skipping Viper IRS copy"
   ! $IRS_FOLDER_EMPTY && ui_print "    the folder is not empty"
   $CUSTOM_IRS_FOUND && ui_print "    custom IRS files have been found"
+  ! $IRS_ARCHIVE_FOUND && ui_print "    the required data couldn't be located"
 fi
-rm "$MODPATH"/"$VIPERIRSFILE"
+rmi "$MODPATH"/"$VIPERIRSFILE"
 if $CUSTOM_IRS_FOUND; then
   ui_print "- Copying custom IRS files"
   for file in $CUSTOM_IRS_FILES; do
