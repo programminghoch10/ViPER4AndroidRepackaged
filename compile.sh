@@ -12,12 +12,14 @@ REPACKAGEDSTRING="repackagedhoch$VERSIONCODE"
 COMMITHASH=$(git log -1 --pretty=%h)
 VERSION=v$VERSIONCODE$CHANGES\($COMMITHASH\)
 
-cp -f README.md magiskmodule/README.md
+git clean -Xdfq magiskmodule/
+
+cp -f README.md magiskmodule/README.md &
 declare -x VERSION VERSIONCODE REPACKAGEDSTRING
-envsubst < module.prop > magiskmodule/module.prop
+envsubst < module.prop > magiskmodule/module.prop &
 
 OUTPUT_FILE="ViPER4AndroidFX-$REPACKAGEDSTRING$CHANGES$COMMITHASH.zip"
-rm ViPER4AndroidFX-repackaged*.zip 2>/dev/null || true
+rm ViPER4AndroidFX-repackaged*.zip &>/dev/null || true
 
 compressFiles() {
   local files="$(basename "$1")"
