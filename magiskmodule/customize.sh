@@ -1,12 +1,9 @@
 #!/bin/bash
 
-[ $API -lt 28 ] && abort "Android SDK $API is not supported!"
+[ ! -f "$MODPATH"/constants.sh ] && abort "Missing constants.sh"
+source "$MODPATH"/constants.sh
 
-VIPERFXPACKAGE="com.pittvandewitt.viperfx"
-SDCARD="/storage/emulated/0"
-FOLDER="$SDCARD/Android/data/$VIPERFXPACKAGE/files"
-VIPERVDCFILE="ViperVDC.tar.gz"
-VIPERIRSFILE="ViperIRS.tar.gz"
+[ $API -lt $MINAPI ] && abort "Android SDK $API is not supported!"
 
 IFS=$'\n'
 SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
@@ -23,13 +20,13 @@ mkdir -p "$FOLDER"
 mkdir -p "$FOLDER"/DDC
 CUSTOM_VDC_FILES=$(find $SDCARD -name '*.vdc' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_VDC_FILES" ] && CUSTOM_VDC_FOUND=true || CUSTOM_VDC_FOUND=false
-[ -f "$MODPATH"/"$VIPERVDCFILE" ] && ORIGINAL_VDC_ARCHIVE_FOUND=true || ORIGINAL_VDC_ARCHIVE_FOUND=false
+[ -f "$MODPATH"/"$VIPERVDCFILE" ] && VDC_ARCHIVE_FOUND=true || VDC_ARCHIVE_FOUND=false
 for file in $(tar -tzf "$MODPATH"/"$VIPERVDCFILE") $CUSTOM_VDC_FILES; do
   file="$FOLDER"/DDC/"$file"
   rmi "$file"
 done
 [ -z "$(ls -A "$FOLDER"/DDC 2>/dev/null)" ] && VDC_FOLDER_EMPTY=true || VDC_FOLDER_EMPTY=false
-if $VDC_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND && $ORIGINAL_VDC_ARCHIVE_FOUND; then
+if $VDC_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND && $VDC_ARCHIVE_FOUND; then
   ui_print "- Copying original ViPER4Android VDCs"
   ui_print "   Note that some of these aren't that great"
   ui_print "   Check out https://t.me/vdcservice for better ones"
@@ -39,7 +36,7 @@ else
   ui_print "- Skipping Viper original VDC copy"
   ! $VDC_FOLDER_EMPTY && ui_print "    the folder is not empty"
   $CUSTOM_VDC_FOUND && ui_print "    custom VDCs have been found"
-  ! $ORIGINAL_VDC_ARCHIVE_FOUND && ui_print "    the required data couldn't be located"
+  ! $VDC_ARCHIVE_FOUND && ui_print "    the required data couldn't be located"
 fi
 rmi "$MODPATH"/"$VIPERVDCFILE"
 if $CUSTOM_VDC_FOUND; then
@@ -79,11 +76,6 @@ if $CUSTOM_IRS_FOUND; then
 fi
 
 ui_print "- Patching system audio files"
-LIBRARY_NAME="v4a_standard_fx"
-EFFECT_NAME="v4a_fx"
-EFFECT_UUID="41d3c987-e6cf-11e3-a88a-11aba5d5c51b"
-LIBRARY_FILE="lib$EFFECT_NAME.so"
-LIBRARY_FILE_PATH="/system/vendor/lib/soundfx/$LIBRARY_FILE"
 AUDIO_EFFECTS_FILES="$( \
   find -H \
   $SEARCH_ROOT/system $SEARCH_ROOT/vendor $SEARCH_ROOT/odm \

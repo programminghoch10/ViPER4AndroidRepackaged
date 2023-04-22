@@ -1,12 +1,13 @@
 #!/bin/bash
 
+cd "$(dirname "$0")"
+source ./constants.sh
+
 waitUntilBootCompleted() {
   while [ $(getprop sys.boot_completed) -ne 1 ] || [ "$(getprop init.svc.bootanim | tr '[:upper:]' '[:lower:]')" != "stopped" ]; do
     sleep 10
   done
 }
-
-VIPERFXPACKAGE="com.pittvandewitt.viperfx"
 
 (
   waitUntilBootCompleted

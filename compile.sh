@@ -4,6 +4,8 @@ set -e -u
 IFS=$'\n'
 renice -n 19 $$ &>/dev/null
 
+source magiskmodule/constants.sh
+
 GZIP=(gzip --best)
 [ -n "$(command -v pigz)" ] && {
   GZIP=(pigz --best)
@@ -36,10 +38,10 @@ compressFiles() {
 }
 
 echo "Compressing Viper IRS files..."
-compressFiles ViperIRS/"*.irs" magiskmodule/ViperIRS.tar.gz &
+compressFiles ViperIRS/"*.irs" magiskmodule/"$VIPERIRSFILE" &
 
 echo "Compressing Original VDC files..."
-compressFiles OriginalVDCs/"*.vdc" magiskmodule/ViperVDC.tar.gz &
+compressFiles OriginalVDCs/"*.vdc" magiskmodule/"$VIPERVDCFILE" &
 
 wait
 
