@@ -2,9 +2,13 @@
 
 set -e -u
 IFS=$'\n'
+renice -n 19 $$ &>/dev/null
 
-GZIP=gzip
-[ -n "$(command -v pigz)" ] && GZIP=pigz
+GZIP=(gzip --best)
+[ -n "$(command -v pigz)" ] && {
+  GZIP=(pigz --best)
+  [ $(nproc) -ge 8 ] && GZIP=(pigz -11)
+}
 
 [ -n "$(git status --porcelain)" ] && CHANGES="+" || CHANGES="-"
 VERSIONCODE=$(git rev-list --count HEAD)
@@ -19,7 +23,7 @@ declare -x VERSION VERSIONCODE REPACKAGEDSTRING
 envsubst < module.prop > magiskmodule/module.prop &
 
 OUTPUT_FILE="ViPER4AndroidFX-$REPACKAGEDSTRING$CHANGES$COMMITHASH.zip"
-rm ViPER4AndroidFX-repackaged*.zip &>/dev/null || true
+rm -f ViPER4AndroidFX-repackaged*.zip
 
 compressFiles() {
   local files="$(basename "$1")"
@@ -27,7 +31,7 @@ compressFiles() {
   local targetarchive="$2"
   (
     cd "$folder"
-    tar -cf- $files | $GZIP --best > "../$targetarchive"
+    tar -cf- $files | "${GZIP[@]}" > "../$targetarchive"
   )
 }
 
