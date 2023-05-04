@@ -28,13 +28,12 @@ for file in $(tar -tzf "$MODPATH"/"$VIPERVDCFILE") $CUSTOM_VDC_FILES; do
 done
 [ -z "$(ls -A "$FOLDER"/DDC 2>/dev/null)" ] && VDC_FOLDER_EMPTY=true || VDC_FOLDER_EMPTY=false
 if $VDC_FOLDER_EMPTY && ! $CUSTOM_VDC_FOUND && $VDC_ARCHIVE_FOUND; then
-  ui_print "- Copying original ViPER4Android VDCs"
-  ui_print "   Note that some of these aren't that great"
-  ui_print "   Check out https://t.me/vdcservice for better ones"
+  ui_print "- Copying ViPER4Android VDCs"
+  ui_print "   Check out https://t.me/vdcservice for custom ones"
   mkdir -p "$FOLDER"/DDC 2>/dev/null
   tar -xzf "$MODPATH"/"$VIPERVDCFILE" -C "$FOLDER"/DDC
 else
-  ui_print "- Skipping Viper original VDC copy"
+  ui_print "- Skipping ViPER4Android VDC copy"
   ! $VDC_FOLDER_EMPTY && ui_print "    the folder is not empty"
   $CUSTOM_VDC_FOUND && ui_print "    custom VDCs have been found"
   ! $VDC_ARCHIVE_FOUND && ui_print "    the required data couldn't be located"
@@ -58,11 +57,11 @@ for file in $(tar -tzf "$MODPATH"/"$VIPERIRSFILE") $CUSTOM_IRS_FILES; do
 done
 [ -z "$(ls -A "$FOLDER"/Kernel 2>/dev/null)" ] && IRS_FOLDER_EMPTY=true || IRS_FOLDER_EMPTY=false
 if $IRS_FOLDER_EMPTY && ! $CUSTOM_IRS_FOUND && $IRS_ARCHIVE_FOUND; then
-  ui_print "- Copying Viper IRS files"
+  ui_print "- Copying ViPER4Android IRS files"
   mkdir -p "$FOLDER"/Kernel 2>/dev/null
   tar -xzf "$MODPATH"/"$VIPERIRSFILE" -C "$FOLDER"/Kernel
 else
-  ui_print "- Skipping Viper IRS copy"
+  ui_print "- Skipping ViPER4Android IRS copy"
   ! $IRS_FOLDER_EMPTY && ui_print "    the folder is not empty"
   $CUSTOM_IRS_FOUND && ui_print "    custom IRS files have been found"
   ! $IRS_ARCHIVE_FOUND && ui_print "    the required data couldn't be located"

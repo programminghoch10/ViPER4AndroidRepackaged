@@ -12,22 +12,17 @@ GZIP=(gzip --best)
   [ $(nproc) -ge 8 ] && GZIP=(pigz -11)
 }
 
-[ -n "$(git status --porcelain)" ] && CHANGES="+" || CHANGES="-"
-VERSIONCODE=$(git rev-list --count HEAD)
-REPACKAGEDSTRING="repackagedhoch$VERSIONCODE"
-COMMITHASH=$(git log -1 --pretty=%h)
-VERSION=v$VERSIONCODE$CHANGES\($COMMITHASH\)
+compressArchiveZip() {
+  local files="$(basename "$1")"
+  local folder="$(dirname "$1")"
+  local targetarchive="$(pwd)"/"$2"
+  (
+    cd "$folder"
+    zip -r -9 -q "$targetarchive" $files
+  )
+}
 
-git clean -Xdfq magiskmodule/
-
-cp -f README.md magiskmodule/README.md &
-declare -x VERSION VERSIONCODE REPACKAGEDSTRING
-envsubst < module.prop > magiskmodule/module.prop &
-
-OUTPUT_FILE="ViPER4AndroidFX-$REPACKAGEDSTRING$CHANGES$COMMITHASH.zip"
-rm -f ViPER4AndroidFX-repackaged*.zip
-
-compressFiles() {
+compressArchiveTarGz() {
   local files="$(basename "$1")"
   local folder="$(dirname "$1")"
   local targetarchive="$2"
@@ -37,18 +32,45 @@ compressFiles() {
   )
 }
 
-echo "Compressing Viper IRS files..."
-compressFiles ViperIRS/"*.irs" magiskmodule/"$VIPERIRSFILE" &
+setVersionVariables() {
+  local folder="$1"
+  [ -n "$(git status --porcelain -- "$folder")" ] && CHANGES="+" || CHANGES="-"
+  VERSIONCODE=$(git rev-list --count HEAD -- "$folder")
+  REPACKAGEDSTRING="repackagedhoch$VERSIONCODE"
+  COMMITHASH=$(git log -1 --pretty=%h -- "$folder")
+  VERSION=v$VERSIONCODE$CHANGES\($COMMITHASH\)
+  FILENAMEVERSION=$REPACKAGEDSTRING$CHANGES$COMMITHASH
+}
 
-echo "Compressing Original VDC files..."
-compressFiles OriginalVDCs/"*.vdc" magiskmodule/"$VIPERVDCFILE" &
+(
+  git clean -Xdfq magiskmodule/
+
+  setVersionVariables .
+
+  cp -f README.md magiskmodule/README.md &
+  declare -x VERSION VERSIONCODE REPACKAGEDSTRING
+  envsubst < module.prop > magiskmodule/module.prop &
+
+  OUTPUT_FILE="ViPER4AndroidFX-$FILENAMEVERSION.zip"
+  rm -f ViPER4AndroidFX-repackaged*.zip &
+
+  compressArchiveTarGz ViperIRS/"*.irs" magiskmodule/"$VIPERIRSFILE" &
+  compressArchiveTarGz ViperVDC/"*.vdc" magiskmodule/"$VIPERVDCFILE" &
+
+  wait
+  compressArchiveZip "magiskmodule/." "$OUTPUT_FILE"
+) &
+
+(
+  rm -f ViperIRS-*.zip
+  setVersionVariables ViperIRS
+  compressArchiveZip ViperIRS/"*.irs" ViperIRS-$FILENAMEVERSION.zip
+) &
+
+(
+  rm -f ViperVDC-*.zip
+  setVersionVariables ViperVDC
+  compressArchiveZip ViperVDC/"*.vdc" ViperVDC-$FILENAMEVERSION.zip
+) &
 
 wait
-
-echo "Compressing Magisk Module..."
-(
-  cd magiskmodule
-  zip -r -9 -q "../$OUTPUT_FILE" .
-)
-
-echo "Done"
