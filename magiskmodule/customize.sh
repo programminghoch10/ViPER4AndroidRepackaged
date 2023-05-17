@@ -4,6 +4,7 @@
 source "$MODPATH"/constants.sh
 
 [ $API -lt $MINAPI ] && abort "Android SDK $API is not supported!"
+[ "$BOOTMODE" != "true" ] && abort "Please install this module within the Magisk app."
 
 IFS=$'\n'
 SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
