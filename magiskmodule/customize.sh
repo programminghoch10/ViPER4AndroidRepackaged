@@ -136,6 +136,8 @@ set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:s
 }
 # this disables battery optimization
 [ $API -ge 30 ] && dumpsys deviceidle whitelist +$VIPERFXPACKAGE >/dev/null
+# this disables automatic permissions revoke if unused
+[ $API -ge 30 ] && appops set --uid $VIPERFXPACKAGE AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 
 for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
   package="$(echo "$packagedata" | cut -d'|' -f1)"
