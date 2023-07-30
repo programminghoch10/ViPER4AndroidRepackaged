@@ -75,6 +75,28 @@ if $CUSTOM_IRS_FOUND; then
   done
 fi
 
+presetCompatible() {
+  local file="$1"
+  grep -q '<int name="32775" value="[12]" />' < "$file" || return 1
+  grep -q '<string name="65540;65541;65542">.*</string>' < "$file" || return 1
+  return 0
+}
+
+mkdir -p "$FOLDER"/Preset
+CUSTOM_PRESET_FILES=$(find $SDCARD -name '*.xml' -not -path "$SDCARD/Android/*")
+[ -n "$CUSTOM_PRESET_FILES" ] && CUSTOM_PRESET_FOUND=true || CUSTOM_PRESET_FOUND=false
+if $CUSTOM_PRESET_FOUND; then
+  ui_print "- Copying custom preset files"
+  for file in $CUSTOM_PRESET_FILES; do
+    ! presetCompatible "$file" && continue
+    ui_print "    $file"
+    cp -f "$file" "$FOLDER"/Preset
+  done
+else
+  ui_print "- Skipping preset copy"
+  ui_print "    custom preset files have not been found"
+fi
+
 ui_print "- Patching system audio files"
 AUDIO_EFFECTS_FILES="$( \
   find -H \
