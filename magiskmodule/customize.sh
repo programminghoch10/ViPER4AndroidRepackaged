@@ -84,8 +84,7 @@ presetCompatible() {
 
 mkdir -p "$FOLDER"/Preset
 CUSTOM_PRESET_FILES=$(find $SDCARD -name '*.xml' -not -path "$SDCARD/Android/*")
-[ -n "$CUSTOM_PRESET_FILES" ] && CUSTOM_PRESET_FOUND=true || CUSTOM_PRESET_FOUND=false
-if $CUSTOM_PRESET_FOUND; then
+if [ -n "$CUSTOM_PRESET_FILES" ]; then
   ui_print "- Copying custom preset files"
   for file in $CUSTOM_PRESET_FILES; do
     ! presetCompatible "$file" && continue
