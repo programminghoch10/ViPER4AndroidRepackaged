@@ -58,9 +58,9 @@ It contains many useability enhancements and all the major fixes needed to run `
   but is usually not needed either.
   You can still combine `ViPER4Android` with other audio mods
   using [`Audio Modification Library`](https://github.com/Magisk-Modules-Repo/aml) if you want to.
-* **Automatic VDC and IRS import** \
-  If you have [bought a VDC file](https://t.me/vdcservice) or downloaded an IRS file
-  which now lays in your Download directory,
+* **Automatic VDC, IRS and preset import** \
+  If you have [bought a VDC file](https://t.me/vdcservice)
+  or downloaded an IRS file or preset,
   you don't have to copy it over manually.
   The installer automatically finds and copies them to the correct place
   for `ViPER4Android` to find them
