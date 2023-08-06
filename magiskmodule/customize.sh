@@ -96,6 +96,26 @@ else
 fi
 
 ui_print "- Patching system audio files"
+osp_detect() {
+  local file="$1"
+  local osp=music
+  case $file in
+    *.conf)
+      spaces=$(sed -n "/^output_session_processing {/,/^}/ {/^ *$osp {/p}" "$fil"e | sed -r "s/( *).*/\1/")
+      effects=$(sed -n "/^output_session_processing {/,/^}/ {/^$spaces\$osp {/,/^$spaces}/p}" "$file" | grep -E "^$spaces +[A-Za-z]+" | sed -r "s/( *.*) .*/\1/g")
+      for effect in ${effects}; do
+        spaces=$(sed -n "/^effects {/,/^}/ {/^ *$effect {/p}" "$file" | sed -r "s/( *).*/\1/")
+        sed -i "/^effects {/,/^}/ {/^$spaces$effect {/,/^$spaces}/d}" "$file"
+      done
+      ;;
+    *.xml)
+      effects=$(sed -n "/^ *<postprocess>$/,/^ *<\/postprocess>$/ {/^ *<stream type=\"$osp\">$/,/^ *<\/stream>$/ {/<stream type=\"$osp\">/d; /<\/stream>/d; s/<apply effect=\"//g; s/\"\/>//g; s/ *//g; p}}" "$file")
+      for effect in ${effects}; do
+        sed -i "/^\( *\)<apply effect=\"$effect\"\/>/d" "$file"
+      done
+      ;;
+  esac
+}
 AUDIO_EFFECTS_FILES="$( \
   find -H \
   $SEARCH_ROOT/system $SEARCH_ROOT/vendor $SEARCH_ROOT/odm \
@@ -121,6 +141,7 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
         < "$ORIGINAL_FILE" > "$FILE"
       ;;
   esac
+  osp_detect "$FILE"
 done
 [ -z "$AUDIO_EFFECTS_FILES" ] && abort "Cant find any system audio configs!"
 
