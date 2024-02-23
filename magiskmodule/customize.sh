@@ -7,8 +7,7 @@ source "$MODPATH"/constants.sh
 [ "$BOOTMODE" != "true" ] && abort "Please install this module within the Magisk app."
 
 IFS=$'\n'
-SEARCH_ROOT="$(magisk --path)/.magisk/mirror"/
-[ ! -d "$SEARCH_ROOT" ] && SEARCH_ROOT=/
+SEARCH_ROOT=/
 
 rmi() {
   local file="$1"
