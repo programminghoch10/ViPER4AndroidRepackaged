@@ -19,8 +19,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ViPER4AndroidRepackaged.zip
-        path: |
-          ViPER4AndroidFX-*.zip
-          ViperIRS-*.zip
-          ViperVDC-*.zip
+        path: ViPER4AndroidFX-*.zip
         if-no-files-found: error

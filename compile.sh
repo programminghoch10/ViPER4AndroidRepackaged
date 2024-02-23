@@ -42,35 +42,19 @@ setVersionVariables() {
   FILENAMEVERSION=$REPACKAGEDSTRING$CHANGES$COMMITHASH
 }
 
-(
-  git clean -Xdfq magiskmodule/
+git clean -Xdfq magiskmodule/
 
-  setVersionVariables .
+setVersionVariables .
 
-  cp -f README.md magiskmodule/README.md &
-  declare -x VERSION VERSIONCODE REPACKAGEDSTRING
-  envsubst < module.prop > magiskmodule/module.prop &
+cp -f README.md magiskmodule/README.md &
+declare -x VERSION VERSIONCODE REPACKAGEDSTRING
+envsubst < module.prop > magiskmodule/module.prop &
 
-  OUTPUT_FILE="ViPER4AndroidFX-$FILENAMEVERSION.zip"
-  rm -f ViPER4AndroidFX-repackaged*.zip &
+OUTPUT_FILE="ViPER4AndroidFX-$FILENAMEVERSION.zip"
+rm -f ViPER4AndroidFX-repackaged*.zip &
 
-  compressArchiveTarGz ViperIRS/"*.irs" magiskmodule/"$VIPERIRSFILE" &
-  compressArchiveTarGz ViperVDC/"*.vdc" magiskmodule/"$VIPERVDCFILE" &
-
-  wait
-  compressArchiveZip "magiskmodule/." "$OUTPUT_FILE"
-) &
-
-(
-  rm -f ViperIRS-*.zip
-  setVersionVariables ViperIRS
-  compressArchiveZip ViperIRS/"*.irs" ViperIRS-$FILENAMEVERSION.zip
-) &
-
-(
-  rm -f ViperVDC-*.zip
-  setVersionVariables ViperVDC
-  compressArchiveZip ViperVDC/"*.vdc" ViperVDC-$FILENAMEVERSION.zip
-) &
+compressArchiveTarGz ViperIRS/"*.irs" magiskmodule/"$VIPERIRSFILE" &
+compressArchiveTarGz ViperVDC/"*.vdc" magiskmodule/"$VIPERVDCFILE" &
 
 wait
+compressArchiveZip "magiskmodule/." "$OUTPUT_FILE"
