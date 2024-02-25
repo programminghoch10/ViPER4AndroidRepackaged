@@ -44,6 +44,8 @@ setVersionVariables() {
 
 git clean -Xdfq magiskmodule/
 
+sed -e 's/^\s*#.*$//' -e '/^$/d' < stockeqpackages.csv > magiskmodule/stockeqpackages.csv &
+
 setVersionVariables .
 
 cp -f README.md magiskmodule/README.md &

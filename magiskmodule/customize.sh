@@ -187,7 +187,7 @@ set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:s
 # this disables automatic permissions revoke if unused
 [ $API -ge 30 ] && appops set --uid $VIPERFXPACKAGE AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 
-for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackages.csv); do
+while IFS= read -r packagedata; do
   package="$(echo "$packagedata" | cut -d'|' -f1)"
   package_filename="$(echo "$packagedata" | cut -d'|' -f2)"
   package_friendlyname="$(echo "$packagedata" | cut -d'|' -f3)"
@@ -212,7 +212,7 @@ for packagedata in $(sed -e 's/^\s*#.*$//' -e '/^$/d' < "$MODPATH"/stockeqpackag
       touch "$MODPATH"/system/"$package_apk_dir"/"$(basename "$package_apk")"
     done
   }
-done
+done < "$MODPATH"/stockeqpackages.csv
 
 ui_print "- Setting Permissions"
 set_perm_recursive "$MODPATH"/system root root 755 644
