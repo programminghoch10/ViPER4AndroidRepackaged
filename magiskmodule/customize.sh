@@ -14,6 +14,11 @@ rmi() {
   [ -f "$file" ] && rm "$file"
 }
 
+denylist_run() {
+  [ -z "$KSU" ] && [ "$MAGISK_VER_CODE" -ge 27000 ] && magisk --denylist exec "$@" && return
+  "$@"
+}
+
 # Create the scoped storage directory
 mkdir -p "$FOLDER"
 
@@ -129,16 +134,18 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   ORIGINAL_FILE="$SEARCH_ROOT"/"$ORIGINAL_FILE"
   case "$FILE" in
     *.conf)
+      denylist_run cat "$ORIGINAL_FILE" | \
       sed \
         -e "s|^effects {|effects {\n  $LIBRARY_NAME {\n    library $EFFECT_NAME\n    uuid $EFFECT_UUID\n  }|" \
         -e "s|^libraries {|libraries {\n  $EFFECT_NAME {\n    path $LIBRARY_FILE_PATH\n  }|" \
-        < "$ORIGINAL_FILE" > "$FILE"
+        > "$FILE"
       ;;
     *.xml)
+      denylist_run cat "$ORIGINAL_FILE" | \
       sed \
         -e "s|<libraries>|<libraries>\n        <library name=\"$EFFECT_NAME\" path=\"$LIBRARY_FILE\"/>|" \
         -e "s|<effects>|<effects>\n        <effect name=\"$LIBRARY_NAME\" library=\"$EFFECT_NAME\" uuid=\"$EFFECT_UUID\"/>|" \
-        < "$ORIGINAL_FILE" > "$FILE"
+        > "$FILE"
       ;;
   esac
   osp_detect "$FILE"
