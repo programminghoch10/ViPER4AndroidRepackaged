@@ -108,13 +108,14 @@ It contains many useability enhancements and all the major fixes needed to run `
 The installer installs the `ViPER4Android` app for you.
 Don't install it yourself.
 
-This mod is targeted at `LineageOS 20`. \
+This mod is targeted at `LineageOS 21`. \
 It has been tested to work on:
 * `LineageOS 16.0` on `s3ve3gjv`
 * `LineageOS 17.1` on `a5xelte`
 * `LineageOS 18.1` on `sailfish`
 * `LineageOS 19.1` on `dreamlte`
-* `LineageOS 20.0` on `beyond1lte`, `beyond2lte`
+* `LineageOS 20.0` on `beyond1lte`, `beyond2lte`, `gts4lv`
+* `LineageOS 21.0` on `beyond2lte`
 
 _Please don't submit pull requests adding your device/ROM combination._ \
 _I will only add devices which I can test myself._
