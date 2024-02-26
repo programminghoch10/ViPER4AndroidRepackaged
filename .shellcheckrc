@@ -1,0 +1,36 @@
+
+# enable additional checks
+enable=add-default-case
+enable=avoid-nullary-conditions
+enable=check-set-e-suppressed
+enable=check-unassigned-uppercase
+enable=deprecate-which
+
+# unused variable warning
+disable=SC2034
+
+# disable referenced but not assigned variables
+disable=SC2154
+
+# dont follow source files
+disable=SC1091
+
+# declare and assign seperately
+disable=SC2155
+
+
+# enforcement relaxations for magisk ash
+#  these functionalities are supported by magisk ash
+#  even if they are not posix shell compliant
+
+# source instead of .
+disable=SC3046
+
+# local function variables
+disable=SC3043
+
+# &> redirection
+disable=SC3020
+
+# IFS
+disable=SC3003

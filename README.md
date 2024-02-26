@@ -9,6 +9,7 @@ It contains many useability enhancements and all the major fixes needed to run `
 ![GitHub Global Download Counter](https://img.shields.io/github/downloads/programminghoch10/Viper4AndroidRepackaged/total?logo=github)
 ![GitHub Latest Download Counter](https://img.shields.io/github/downloads/programminghoch10/Viper4AndroidRepackaged/latest/total?logo=github) \
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/programminghoch10/ViPER4AndroidRepackaged/build.yml?logo=github%20actions&logoColor=white)
+[![GitHub Workflow ShellCheck Status](https://img.shields.io/github/actions/workflow/status/programminghoch10/ViPER4AndroidRepackaged/shellcheck.yml?logo=github%20actions&logoColor=white&label=shellcheck)](https://github.com/programminghoch10/ViPER4AndroidRepackaged/actions/workflows/shellcheck.yml)
 ![GitHub commits since last release](https://img.shields.io/github/commits-since/programminghoch10/ViPER4AndroidRepackaged/latest?logo=git&logoColor=white)
 ![GitHub last commit](https://img.shields.io/github/last-commit/programminghoch10/ViPER4AndroidRepackaged?logo=git&logoColor=white) \
 ![GitHub Repo stars](https://img.shields.io/github/stars/programminghoch10/ViPER4AndroidRepackaged?style=social) \
