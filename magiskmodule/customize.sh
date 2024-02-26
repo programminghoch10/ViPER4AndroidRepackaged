@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 [ ! -f "$MODPATH"/constants.sh ] && abort "Missing constants.sh"
 source "$MODPATH"/constants.sh
 
-[ $API -lt $MINAPI ] && abort "Android SDK $API is not supported!"
-[ "$BOOTMODE" != "true" ] && abort "Please install this module within the Magisk app."
+[ "$API" -lt "$MINAPI" ] && abort "Android SDK $API is not supported!"
+[ "$BOOTMODE" != true ] && abort "Please install this module within the Magisk app."
 
 IFS=$'\n'
 SEARCH_ROOT=/
@@ -23,7 +23,7 @@ denylist_run() {
 mkdir -p "$FOLDER"
 
 mkdir -p "$FOLDER"/DDC
-CUSTOM_VDC_FILES=$(find $SDCARD -name '*.vdc' -not -path "$SDCARD/Android/*")
+CUSTOM_VDC_FILES=$(find "$SDCARD" -name '*.vdc' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_VDC_FILES" ] && CUSTOM_VDC_FOUND=true || CUSTOM_VDC_FOUND=false
 [ -f "$MODPATH"/"$VIPERVDCFILE" ] && VDC_ARCHIVE_FOUND=true || VDC_ARCHIVE_FOUND=false
 for file in $(tar -tzf "$MODPATH"/"$VIPERVDCFILE") $CUSTOM_VDC_FILES; do
@@ -52,7 +52,7 @@ if $CUSTOM_VDC_FOUND; then
 fi
 
 mkdir -p "$FOLDER"/Kernel
-CUSTOM_IRS_FILES=$(find $SDCARD -name '*.irs' -not -path "$SDCARD/Android/*")
+CUSTOM_IRS_FILES=$(find "$SDCARD" -name '*.irs' -not -path "$SDCARD/Android/*")
 [ -n "$CUSTOM_IRS_FILES" ] && CUSTOM_IRS_FOUND=true || CUSTOM_IRS_FOUND=false
 [ -f "$MODPATH"/"$VIPERIRSFILE" ] && IRS_ARCHIVE_FOUND=true || IRS_ARCHIVE_FOUND=false
 for file in $(tar -tzf "$MODPATH"/"$VIPERIRSFILE") $CUSTOM_IRS_FILES; do
@@ -87,7 +87,7 @@ presetCompatible() {
 }
 
 mkdir -p "$FOLDER"/Preset
-CUSTOM_PRESET_FILES=$(find $SDCARD -name '*.xml' -not -path "$SDCARD/Android/*")
+CUSTOM_PRESET_FILES=$(find "$SDCARD" -name '*.xml' -not -path "$SDCARD/Android/*")
 if [ -n "$CUSTOM_PRESET_FILES" ]; then
   ui_print "- Copying custom preset files"
   for file in $CUSTOM_PRESET_FILES; do
@@ -119,6 +119,9 @@ osp_detect() {
         sed -i "/^\( *\)<apply effect=\"$effect\"\/>/d" "$file"
       done
       ;;
+    *)
+      abort "failed to run osp_detect on $file"
+      ;;
   esac
 }
 AUDIO_EFFECTS_FILES="$( \
@@ -130,7 +133,7 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
   ui_print "    Patching $ORIGINAL_FILE"
   FILE="$MODPATH"/"$(echo "$ORIGINAL_FILE" | sed -e 's|^/system/|/|g' -e 's|^/|/system/|')"
   [ -f "$FILE" ] && continue
-  mkdir -p "$(dirname $FILE)"
+  mkdir -p "$(dirname "$FILE")"
   ORIGINAL_FILE="$SEARCH_ROOT"/"$ORIGINAL_FILE"
   case "$FILE" in
     *.conf)
@@ -147,6 +150,9 @@ for ORIGINAL_FILE in $AUDIO_EFFECTS_FILES; do
         -e "s|<effects>|<effects>\n        <effect name=\"$LIBRARY_NAME\" library=\"$EFFECT_NAME\" uuid=\"$EFFECT_UUID\"/>|" \
         > "$FILE"
       ;;
+    *)
+      abort "unable to patch $ORIGINAL_FILE"
+      ;;
   esac
   osp_detect "$FILE"
 done
@@ -155,10 +161,10 @@ done
 ui_print "- Installing the ViPER4AndroidFX user app"
 APK="$MODPATH"/v4afx.apk
 [ ! -f "$APK" ] && abort "Missing ViPER4Android APK!"
-[ -n "$(pm list packages | grep "^package:$VIPERFXPACKAGE$")" ] && APK_UPGRADE=true || APK_UPGRADE=false
+pm list packages | grep -q "^package:$VIPERFXPACKAGE$" && APK_UPGRADE=true || APK_UPGRADE=false
 APK_SIZE=$(stat -c %s "$APK")
 installAPK() {
-  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S $APK_SIZE < "$APK" &>/dev/null
+  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S "$APK_SIZE" < "$APK" &>/dev/null
 }
 installAPK || {
   $APK_UPGRADE && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
@@ -173,27 +179,27 @@ VIPERFXPREFSOWNER="$(stat -c '%U' "$VIPERFXPREFS")"
 VIPERFXSHAREDPREFS="$VIPERFXPREFS"/shared_prefs
 [ ! -d "$VIPERFXSHAREDPREFS" ] && mkdir "$VIPERFXSHAREDPREFS"
 cp -f "$MODPATH"/viperfx_preferences.xml "$VIPERFXSHAREDPREFS"/"${VIPERFXPACKAGE}_preferences.xml"
-chown -R $VIPERFXPREFSOWNER:$VIPERFXPREFSOWNER "$VIPERFXPREFS"
+chown -R "$VIPERFXPREFSOWNER":"$VIPERFXPREFSOWNER" "$VIPERFXPREFS"
 set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:sdcardfs:s0
 # this permanently hides the notifications without the possiblity of reenabling them
-[ $API -ge 31 ] && pm set-distracting-restriction --flag hide-notifications $VIPERFXPACKAGE
-[ $API -ge 33 ] && {
+[ "$API" -ge 31 ] && pm set-distracting-restriction --flag hide-notifications "$VIPERFXPACKAGE"
+[ "$API" -ge 33 ] && {
   # this will tell android that the user made the final decision to not receive notifications
-  pm revoke $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS
-  pm set-permission-flags $VIPERFXPACKAGE android.permission.POST_NOTIFICATIONS user-fixed
+  pm revoke "$VIPERFXPACKAGE" android.permission.POST_NOTIFICATIONS
+  pm set-permission-flags "$VIPERFXPACKAGE" android.permission.POST_NOTIFICATIONS user-fixed
 }
 # this disables battery optimization
-[ $API -ge 30 ] && dumpsys deviceidle whitelist +$VIPERFXPACKAGE >/dev/null
+[ "$API" -ge 30 ] && dumpsys deviceidle whitelist +"$VIPERFXPACKAGE" >/dev/null
 # this disables automatic permissions revoke if unused
-[ $API -ge 30 ] && appops set --uid $VIPERFXPACKAGE AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
+[ "$API" -ge 30 ] && appops set --uid "$VIPERFXPACKAGE" AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 
 while IFS= read -r packagedata; do
   package="$(echo "$packagedata" | cut -d'|' -f1)"
   package_filename="$(echo "$packagedata" | cut -d'|' -f2)"
   package_friendlyname="$(echo "$packagedata" | cut -d'|' -f3)"
-  [ -n "$(pm list packages | grep "^package:$package$")" ] && {
+  pm list packages | grep -q "^package:$package$" && {
     ui_print "- Disabling $package_friendlyname (p)"
-    package_apk="$(pm list packages -f $package | grep -E "package:.*=$package$" | sed "s/package:\(.*\)=$package/\1/")"
+    package_apk="$(pm list packages -f "$package" | grep -E "package:.*=$package$" | sed "s/package:\(.*\)=$package/\1/")"
     package_apk_dir="$(dirname "$package_apk" | sed -e 's|^/||' -e 's|^system/||')"
     mkdir -p "$MODPATH"/system/"$package_apk_dir"
     touch "$MODPATH"/system/"$package_apk_dir"/"$(basename "$package_apk")"

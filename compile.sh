@@ -9,7 +9,7 @@ source magiskmodule/constants.sh
 GZIP=(gzip --best)
 [ -n "$(command -v pigz)" ] && {
   GZIP=(pigz --best)
-  [ $(nproc) -ge 8 ] && GZIP=(pigz -11)
+  [ "$(nproc)" -ge 8 ] && GZIP=(pigz -11)
 }
 
 compressArchiveZip() {
@@ -18,6 +18,7 @@ compressArchiveZip() {
   local targetarchive="$(pwd)"/"$2"
   (
     cd "$folder"
+    #shellcheck disable=SC2086
     zip -r -9 -q "$targetarchive" $files
   )
 }
@@ -28,7 +29,8 @@ compressArchiveTarGz() {
   local targetarchive="$2"
   (
     cd "$folder"
-    tar -cf- $files | "${GZIP[@]}" > "../$targetarchive"
+    #shellcheck disable=SC2086
+    tar -cf - $files | "${GZIP[@]}" > "../$targetarchive"
   )
 }
 

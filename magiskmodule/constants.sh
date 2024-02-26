@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # minimum required SDK level
 MINAPI=28
