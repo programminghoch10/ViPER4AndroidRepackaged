@@ -4,7 +4,8 @@ cd "$(dirname "$0")"
 source ./constants.sh
 
 waitUntilBootCompleted() {
-  while [ $(getprop sys.boot_completed) -ne 1 ] || [ "$(getprop init.svc.bootanim | tr '[:upper:]' '[:lower:]')" != "stopped" ]; do
+  resetprop -w sys.boot_completed 0 && return
+  while [ $(getprop sys.boot_completed) -eq 0 ]; do
     sleep 10
   done
 }
