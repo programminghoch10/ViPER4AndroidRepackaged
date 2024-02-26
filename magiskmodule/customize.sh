@@ -164,14 +164,14 @@ APK="$MODPATH"/v4afx.apk
 pm list packages | grep -q "^package:$VIPERFXPACKAGE$" && APK_UPGRADE=true || APK_UPGRADE=false
 APK_SIZE=$(stat -c %s "$APK")
 installAPK() {
-  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S "$APK_SIZE" < "$APK" &>/dev/null
+  pm install --install-location 1 --pkg "$VIPERFXPACKAGE" -S "$APK_SIZE" < "$APK" >&2
 }
 installAPK || {
-  $APK_UPGRADE && pm uninstall -k "$VIPERFXPACKAGE" &>/dev/null
+  $APK_UPGRADE && pm uninstall -k "$VIPERFXPACKAGE" >&2
   APK_UPGRADE=false
   installAPK
 } || abort "Failed to install V4AFX!"
-! $APK_UPGRADE && pm disable "$VIPERFXPACKAGE" &>/dev/null
+! $APK_UPGRADE && pm disable "$VIPERFXPACKAGE" >&2
 
 ui_print "- Configuring ViPER4Android"
 VIPERFXPREFS="$(pm dump "$VIPERFXPACKAGE" | grep dataDir | head -n 1 | cut -d'=' -f2)"
@@ -189,7 +189,7 @@ set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:s
   pm set-permission-flags "$VIPERFXPACKAGE" android.permission.POST_NOTIFICATIONS user-fixed
 }
 # this disables battery optimization
-[ "$API" -ge 30 ] && dumpsys deviceidle whitelist +"$VIPERFXPACKAGE" >/dev/null
+[ "$API" -ge 30 ] && dumpsys deviceidle whitelist +"$VIPERFXPACKAGE" >&2
 # this disables automatic permissions revoke if unused
 [ "$API" -ge 30 ] && appops set --uid "$VIPERFXPACKAGE" AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 
