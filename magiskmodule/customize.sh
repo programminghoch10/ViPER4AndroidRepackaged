@@ -87,7 +87,7 @@ presetCompatible() {
 }
 
 mkdir -p "$FOLDER"/Preset
-CUSTOM_PRESET_FILES=$(find "$SDCARD" -name '*.xml' -not -path "$SDCARD/Android/*")
+CUSTOM_PRESET_FILES=$(find "$SDCARD" -path "$SDCARD/Android" -prune -o -type f -name '*.xml' -size -1048576c -print)
 if [ -n "$CUSTOM_PRESET_FILES" ]; then
   ui_print "- Copying custom preset files"
   for file in $CUSTOM_PRESET_FILES; do
@@ -106,7 +106,7 @@ osp_detect() {
   local osp=music
   case $file in
     *.conf)
-      spaces=$(sed -n "/^output_session_processing {/,/^}/ {/^ *$osp {/p}" "$fil"e | sed -r "s/( *).*/\1/")
+      spaces=$(sed -n "/^output_session_processing {/,/^}/ {/^ *$osp {/p}" "$file" | sed -r "s/( *).*/\1/")
       effects=$(sed -n "/^output_session_processing {/,/^}/ {/^$spaces\$osp {/,/^$spaces}/p}" "$file" | grep -E "^$spaces +[A-Za-z]+" | sed -r "s/( *.*) .*/\1/g")
       for effect in ${effects}; do
         spaces=$(sed -n "/^effects {/,/^}/ {/^ *$effect {/p}" "$file" | sed -r "s/( *).*/\1/")
@@ -174,13 +174,9 @@ installAPK || {
 ! $APK_UPGRADE && pm disable "$VIPERFXPACKAGE" >&2
 
 ui_print "- Configuring ViPER4Android"
-VIPERFXPREFS="$(pm dump "$VIPERFXPACKAGE" | grep dataDir | head -n 1 | cut -d'=' -f2)"
-VIPERFXPREFSOWNER="$(stat -c '%U' "$VIPERFXPREFS")"
-VIPERFXSHAREDPREFS="$VIPERFXPREFS"/shared_prefs
-[ ! -d "$VIPERFXSHAREDPREFS" ] && mkdir "$VIPERFXSHAREDPREFS"
-cp -f "$MODPATH"/viperfx_preferences.xml "$VIPERFXSHAREDPREFS"/"${VIPERFXPACKAGE}_preferences.xml"
-chown -R "$VIPERFXPREFSOWNER":"$VIPERFXPREFSOWNER" "$VIPERFXPREFS"
-set_perm_recursive "$FOLDER" "$VIPERFXPREFSOWNER" sdcard_rw 771 660 u:object_r:sdcardfs:s0
+VIPERFXSTORAGEOWNER="$(stat -c '%u' "$FOLDER")"
+[ -n "$VIPERFXSTORAGEOWNER" ] || abort "Could not determine ViPER4Android shared-storage owner"
+set_perm_recursive "$FOLDER" "$VIPERFXSTORAGEOWNER" sdcard_rw 771 660 u:object_r:sdcardfs:s0
 # this permanently hides the notifications without the possiblity of reenabling them
 [ "$API" -ge 31 ] && pm set-distracting-restriction --flag hide-notifications "$VIPERFXPACKAGE"
 [ "$API" -ge 33 ] && {
